@@ -21,3 +21,10 @@ packages = ["cytoolz-stubs"]
 
 [tool.hatch.build.targets.sdist]
 include = ["/src", "/pyproject.toml"]
+
+[dependency-groups]
+dev = [
+    "cytoolz>=1.0.1",
+    "tqdm>=4.67.1",
+]
+

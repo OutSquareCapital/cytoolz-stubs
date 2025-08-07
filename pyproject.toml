@@ -1,0 +1,23 @@
+[project]
+name = "cytoolz-stubs"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "OutSquareCapital", email = "166045166+OutSquareCapital@users.noreply.github.com" }
+]
+requires-python = ">=3.13"
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.packages]
+"cytoolz-stubs" = "src"
+
+[tool.hatch.build.targets.wheel]
+packages = ["cytoolz-stubs"]
+
+[tool.hatch.build.targets.sdist]
+include = ["/src", "/pyproject.toml"]

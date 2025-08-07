@@ -17,3 +17,8 @@ only-include = ["src"]
 
 [tool.hatch.build.targets.sdist]
 include = ["src", "pyproject.toml", "README.md"]
+
+[dependency-groups]
+dev = [
+    "cytoolz>=1.0.1",
+]

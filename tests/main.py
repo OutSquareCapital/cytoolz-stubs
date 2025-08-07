@@ -5,8 +5,6 @@ import sys
 from pathlib import Path
 from types import ModuleType
 
-from tqdm import tqdm
-
 
 def _get_modules(package: str) -> list[ModuleType]:
     modules: list[ModuleType] = []
@@ -22,16 +20,12 @@ def _get_modules(package: str) -> list[ModuleType]:
 
 def _test_modules(modules: list[ModuleType], verbose: bool) -> None:
     failures = 0
-    with tqdm(total=len(modules), desc="Running doctests", unit="module") as pbar:
-        for mod in modules:
-            pbar.set_description(f"Running doctests in {mod.__name__}")
-            result = doctest.testmod(mod, verbose=verbose)
-            failures += result.failed
-            if failures > 0:
-                print(f"\nSome doctests failed. ❌ ({failures} failures)")
-                pbar.close()
-                sys.exit(1)
-            pbar.update(1)
+    for mod in modules:
+        result = doctest.testmod(mod, verbose=verbose)
+        failures += result.failed
+        if failures > 0:
+            print(f"\nSome doctests failed. ❌ ({failures} failures)")
+            sys.exit(1)
 
 
 def run_all_doctests(package: str, verbose: bool = False) -> None:

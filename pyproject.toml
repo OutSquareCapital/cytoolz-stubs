@@ -1,34 +1,19 @@
-[project]
-name = "cytoolz-stubs"
-version = "0.1.1"
-description = "Add your description here"
-readme = "README.md"
-authors = [
-    { name = "OutSquareCapital", email = "166045166+OutSquareCapital@users.noreply.github.com" }
-]
-requires-python = ">=3.13"
-dependencies = []
-
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.hatch.packages]
-cytoolz = "src/cytoolz"
-[tool.hatch.build]
-only-packages = true
-artifacts = ["src/cytoolz/py.typed"]
+[project]
+name = "cytoolz-stubs"
+version = "0.1.1"
+description = "Type stubs for cytoolz"
+readme = "README.md"
+requires-python = ">=3.13"
 
 [tool.hatch.build.targets.wheel]
-packages = []
-only-include = ["src/cytoolz"]
-sources = ["src"]
+only-include = ["src"]
+
+[tool.hatch.build.targets.wheel.sources]
+"src/cytoolz" = "cytoolz"
 
 [tool.hatch.build.targets.sdist]
-include = ["/src", "/pyproject.toml"]
-
-[dependency-groups]
-dev = [
-    "cytoolz>=1.0.1",
-    "tqdm>=4.67.1",
-]
+include = ["src", "pyproject.toml", "README.md"]

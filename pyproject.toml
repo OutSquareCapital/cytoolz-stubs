@@ -1,6 +1,6 @@
 [project]
 name = "cytoolz-stubs"
-version = "0.1.0"
+version = "0.1.1"
 description = "Add your description here"
 readme = "README.md"
 authors = [
@@ -14,10 +14,10 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.packages]
-"cytoolz-stubs" = "src"
+cytoolz = "src/cytoolz"  # Pointe directement vers le dossier contenant les stubs
 
 [tool.hatch.build.targets.wheel]
-packages = ["cytoolz-stubs"]
+packages = ["cytoolz"]  # Ceci installe les stubs dans le répertoire cytoolz
 
 [tool.hatch.build.targets.sdist]
 include = ["/src", "/pyproject.toml"]
@@ -27,4 +27,3 @@ dev = [
     "cytoolz>=1.0.1",
     "tqdm>=4.67.1",
 ]
-

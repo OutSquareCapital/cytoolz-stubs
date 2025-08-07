@@ -14,10 +14,15 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.packages]
-cytoolz = "src/cytoolz"  # Pointe directement vers le dossier contenant les stubs
+cytoolz = "src/cytoolz"
+[tool.hatch.build]
+only-packages = true
+artifacts = ["src/cytoolz/py.typed"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["cytoolz"]  # Ceci installe les stubs dans le répertoire cytoolz
+packages = []
+only-include = ["src/cytoolz"]
+sources = ["src"]
 
 [tool.hatch.build.targets.sdist]
 include = ["/src", "/pyproject.toml"]

@@ -28,7 +28,7 @@ def assoc[K, V](d: dict[K, V], key: K, value: V) -> dict[K, V]:
 
     >>> assoc({"x": 1}, "x", 2)
     {'x': 2}
-    >>> assoc({"x": 1}, "y", 3)  # doctest: +SKIP
+    >>> assoc({"x": 1}, "y", 3)
     {'x': 1, 'y': 3}
     """
     ...
@@ -47,7 +47,7 @@ def assoc_in[K, V](
     ...     "order": {"items": ["Apple", "Orange"], "costs": [0.50, 1.25]},
     ...     "credit card": "5555-1234-1234-1234",
     ... }
-    >>> assoc_in(purchase, ["order", "costs"], [0.25, 1.00])  # doctest: +SKIP
+    >>> assoc_in(purchase, ["order", "costs"], [0.25, 1.00])
     {'credit card': '5555-1234-1234-1234',
     'name': 'Alice',
     'order': {'costs': [0.25, 1.00], 'items': ['Apple', 'Orange']}}
@@ -132,14 +132,14 @@ def itemfilter[K, V](
     ...
 
 def itemmap[K, V, K1, V1](
-    func: Callable[[tuple[K, V]], tuple[K1, V1]] | Callable[[K, V], tuple[K1, V1]],
+    func: Callable[[tuple[K, V]], tuple[K1, V1]],
     d: dict[K, V],
 ) -> dict[K1, V1]:
     """
     Apply function to items of dictionary
 
     >>> accountids = {"Alice": 10, "Bob": 20}
-    >>> itemmap(reversed, accountids)  # doctest: +SKIP
+    >>> itemmap(reversed, accountids)
     {10: "Alice", 20: "Bob"}
 
     See Also:
@@ -177,7 +177,7 @@ def keymap[K, V, K1](
     Apply function to keys of dictionary
 
     >>> bills = {"Alice": [20, 15, 30], "Bob": [10, 35]}
-    >>> keymap(str.lower, bills)  # doctest: +SKIP
+    >>> keymap(str.lower, bills)
     {'alice': [20, 15, 30], 'bob': [10, 35]}
 
     See Also:
@@ -215,7 +215,7 @@ def merge_with[K, V](
     >>> merge_with(sum, {1: 1, 2: 2}, {1: 10, 2: 20})
     {1: 11, 2: 22}
 
-    >>> merge_with(first, {1: 1, 2: 2}, {2: 20, 3: 30})  # doctest: +SKIP
+    >>> merge_with(first, {1: 1, 2: 2}, {2: 20, 3: 30})
     {1: 1, 2: 2, 3: 30}
 
     See Also:
@@ -254,7 +254,7 @@ def update_in[K, V](
     ...     "purchase": {"items": ["Apple", "Orange"], "costs": [0.50, 1.25]},
     ...     "credit card": "5555-1234-1234-1234",
     ... }
-    >>> update_in(transaction, ["purchase", "costs"], sum)  # doctest: +SKIP
+    >>> update_in(transaction, ["purchase", "costs"], sum)
     {'credit card': '5555-1234-1234-1234',
     'name': 'Alice',
     'purchase': {'costs': 1.75, 'items': ['Apple', 'Orange']}}
@@ -296,7 +296,7 @@ def valmap[K, V, V1](
     Apply function to values of dictionary
 
     >>> bills = {"Alice": [20, 15, 30], "Bob": [10, 35]}
-    >>> valmap(sum, bills)  # doctest: +SKIP
+    >>> valmap(sum, bills)
     {'Alice': 65, 'Bob': 45}
 
     See Also:

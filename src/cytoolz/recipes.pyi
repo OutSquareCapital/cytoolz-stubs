@@ -17,7 +17,7 @@ def countby[T, K](key: Callable[[T], K], seq: Iterable[T]) -> dict[K, int]:
 
     >>> def iseven(x):
     ...     return x % 2 == 0
-    >>> countby(iseven, [1, 2, 3])  # doctest:+SKIP
+    >>> countby(iseven, [1, 2, 3])
     {True: 1, False: 2}
 
     See Also:

@@ -131,7 +131,7 @@ def frequencies[T](seq: Iterable[T]) -> dict[T, int]:
     """
     Find number of occurrences of each value in seq
 
-    >>> frequencies(["cat", "cat", "ox", "pig", "pig", "cat"])  # doctest: +SKIP
+    >>> frequencies(["cat", "cat", "ox", "pig", "pig", "cat"])
     {'cat': 3, 'ox': 1, 'pig': 2}
 
     See Also:
@@ -155,11 +155,11 @@ def groupby[T, KT](key: Callable[[T], KT], seq: Iterable[T]) -> dict[KT, list[T]
     Group a collection by a key function
 
     >>> names = ["Alice", "Bob", "Charlie", "Dan", "Edith", "Frank"]
-    >>> groupby(len, names)  # doctest: +SKIP
+    >>> groupby(len, names)
     {3: ['Bob', 'Dan'], 5: ['Alice', 'Edith', 'Frank'], 7: ['Charlie']}
 
     >>> iseven = lambda x: x % 2 == 0
-    >>> groupby(iseven, [1, 2, 3, 4, 5, 6, 7, 8])  # doctest: +SKIP
+    >>> groupby(iseven, [1, 2, 3, 4, 5, 6, 7, 8])
     {False: [1, 3, 5, 7], True: [2, 4, 6, 8]}
 
     Non-callable keys imply grouping on a member.
@@ -171,7 +171,7 @@ def groupby[T, KT](key: Callable[[T], KT], seq: Iterable[T]) -> dict[KT, list[T]
     ...         {"name": "Bob", "gender": "M"},
     ...         {"name": "Charlie", "gender": "M"},
     ...     ],
-    ... )  # doctest:+SKIP
+    ... )
     {'F': [{'gender': 'F', 'name': 'Alice'}],
      'M': [{'gender': 'M', 'name': 'Bob'},
            {'gender': 'M', 'name': 'Charlie'}]}
@@ -341,7 +341,7 @@ def join[T1, T2, KT](
     must also be hashable.
 
     >>> # result = join(second, friends, first, cities)
-    >>> result = join(1, friends, 0, cities)  # doctest: +SKIP
+    >>> result = join(1, friends, 0, cities)
     """
     ...
 
@@ -502,9 +502,9 @@ def random_sample[T](
     next time it returned 6 items.
 
     >>> seq = list(range(100))
-    >>> list(random_sample(0.1, seq))  # doctest: +SKIP
+    >>> list(random_sample(0.1, seq))
     [6, 9, 19, 35, 45, 50, 58, 62, 68, 72, 78, 86, 95]
-    >>> list(random_sample(0.1, seq))  # doctest: +SKIP
+    >>> list(random_sample(0.1, seq))
     [6, 44, 54, 61, 69, 94]
 
     Providing an integer seed for ``random_state`` will result in
@@ -537,15 +537,15 @@ def reduceby[T, KT, VT](
 
     The computation:
 
-    >>> result = reduceby(key, binop, seq, init)  # doctest: +SKIP
+    >>> result = reduceby(key, binop, seq, init)
 
     is equivalent to the following:
 
-    >>> def reduction(group):  # doctest: +SKIP
-    ...     return reduce(binop, group, init)  # doctest: +SKIP
+    >>> def reduction(group):
+    ...     return reduce(binop, group, init)
 
-    >>> groups = groupby(key, seq)  # doctest: +SKIP
-    >>> result = valmap(reduction, groups)  # doctest: +SKIP
+    >>> groups = groupby(key, seq)
+    >>> result = valmap(reduction, groups)
 
     But the former does not build the intermediate groups, allowing it to
     operate in much less space.  This makes it suitable for larger datasets
@@ -563,10 +563,10 @@ def reduceby[T, KT, VT](
 
     >>> data = [1, 2, 3, 4, 5]
 
-    >>> reduceby(iseven, add, data)  # doctest: +SKIP
+    >>> reduceby(iseven, add, data)
     {False: 9, True: 6}
 
-    >>> reduceby(iseven, mul, data)  # doctest: +SKIP
+    >>> reduceby(iseven, mul, data)
     {False: 15, True: 8}
 
     Complex Example
@@ -580,7 +580,7 @@ def reduceby[T, KT, VT](
     ... ]
 
     >>> reduceby(
-    ...     "state",  # doctest: +SKIP
+    ...     "state",
     ...     lambda acc, x: acc + x["cost"],
     ...     projects,
     ...     0,
@@ -594,7 +594,7 @@ def reduceby[T, KT, VT](
     ...     s.add(i)
     ...     return s
 
-    >>> reduceby(iseven, set_add, [1, 2, 3, 4, 1, 2, 3], set)  # doctest: +SKIP
+    >>> reduceby(iseven, set_add, [1, 2, 3, 4, 1, 2, 3], set)
     {True:  set([2, 4]),
      False: set([1, 3])}
     """

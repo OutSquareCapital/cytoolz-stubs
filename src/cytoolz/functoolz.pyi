@@ -18,8 +18,8 @@ functoolz
 - thread_last : Thread value through a sequence of functions/forms
 """
 
-from typing import Any
 from collections.abc import Callable, MutableMapping
+from typing import Any
 
 def apply[T](func: Callable[..., T], *args: Any, **kwargs: Any) -> T:
     """Applies a function and returns the results

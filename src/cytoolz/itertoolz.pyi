@@ -1,5 +1,5 @@
-from typing import Any, overload
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
+from typing import Any, overload
 
 def accumulate[T](
     binop: Callable[[T, T], T], seq: Iterable[T], initial: Any = ...

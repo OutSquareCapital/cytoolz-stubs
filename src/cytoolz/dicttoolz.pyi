@@ -17,8 +17,8 @@ dicttoolz
 - valmap : Apply function to values of dictionary
 """
 
-from typing import Any
 from collections.abc import Callable, Iterable
+from typing import Any
 
 def assoc[K, V](d: dict[K, V], key: K, value: V) -> dict[K, V]:
     """
@@ -132,7 +132,8 @@ def itemfilter[K, V](
     ...
 
 def itemmap[K, V, K1, V1](
-    func: Callable[[tuple[K, V]], tuple[K1, V1]], d: dict[K, V]
+    func: Callable[[tuple[K, V]], tuple[K1, V1]] | Callable[[K, V], tuple[K1, V1]],
+    d: dict[K, V],
 ) -> dict[K1, V1]:
     """
     Apply function to items of dictionary

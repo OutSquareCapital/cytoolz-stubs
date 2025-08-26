@@ -6,8 +6,8 @@ recipes
 - partitionby : Partition a sequence according to a function
 """
 
-from typing import Any
 from collections.abc import Callable, Iterable, Iterator
+from typing import Any
 
 def countby[T, K](key: Callable[[T], K], seq: Iterable[T]) -> dict[K, int]:
     """Count elements of a collection by a key function

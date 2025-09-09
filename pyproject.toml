@@ -7,7 +7,7 @@ name = "cytoolz-stubs"
 version = "0.1.1"
 description = "Type stubs for cytoolz"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 
 [tool.hatch.build.targets.wheel]
 only-include = ["src"]

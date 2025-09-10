@@ -1,7 +1,3 @@
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
 [project]
 name = "cytoolz-stubs"
 version = "0.1.1"
@@ -9,14 +5,10 @@ description = "Type stubs for cytoolz"
 readme = "README.md"
 requires-python = ">=3.12"
 
-[tool.hatch.build.targets.wheel]
-only-include = ["src"]
+[build-system]
+requires = ["uv_build>=0.8.15,<0.9.0"]
+build-backend = "uv_build"
 
-[tool.hatch.build.targets.wheel.sources]
-"src/cytoolz" = "cytoolz"
-
-[tool.hatch.build.targets.sdist]
-include = ["src", "pyproject.toml", "README.md"]
 
 [dependency-groups]
 dev = [

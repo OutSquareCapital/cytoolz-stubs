@@ -85,7 +85,9 @@ def count(seq: Iterable[Any]) -> int:
     """
     ...
 
-def diff[T](*seqs: Iterable[T], **kwargs: Any) -> Iterator[tuple[T, ...]]:
+def diff[T](
+    *seqs: Iterable[T], diff: T | None = None, key: Callable[[T], Any] | None = None
+) -> Iterator[tuple[T, ...]]:
     """
     Return those items that differ between sequences
 

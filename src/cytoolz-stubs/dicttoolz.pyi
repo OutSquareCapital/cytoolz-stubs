@@ -18,7 +18,7 @@ dicttoolz
 """
 
 from collections.abc import Callable, Iterable
-from typing import Any
+from typing import Any, overload
 
 def assoc[K, V](d: dict[K, V], key: K, value: V) -> dict[K, V]:
     """
@@ -130,6 +130,12 @@ def itemfilter[K, V](
         itemmap
     """
     ...
+
+@overload
+def itemmap[K, V](
+    func: Callable[[tuple[K, V]], tuple[V, K]],
+    d: dict[K, V],
+) -> dict[V, K]: ...
 
 def itemmap[K, V, K1, V1](
     func: Callable[[tuple[K, V]], tuple[K1, V1]],

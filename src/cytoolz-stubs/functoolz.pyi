@@ -19,9 +19,9 @@ functoolz
 """
 
 from collections.abc import Callable, MutableMapping
-from typing import Any
+from typing import Any, overload
 
-def apply[T](func: Callable[..., T], *args: Any, **kwargs: Any) -> T:
+def apply[**P, T](func: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> T:
     """Applies a function and returns the results
 
     >>> def double(x):
@@ -36,7 +36,7 @@ def apply[T](func: Callable[..., T], *args: Any, **kwargs: Any) -> T:
     """
     ...
 
-def complement(func: Callable[..., bool]) -> Callable[..., bool]:
+def complement[**P](func: Callable[P, bool]) -> Callable[P, bool]:
     """Convert a predicate function to its logical complement.
 
     In other words, return a function that, for inputs that normally
@@ -72,6 +72,31 @@ def compose(*funcs: Callable[..., Any]) -> Callable[..., Any]:
     """
     ...
 
+@overload
+def compose_left[**P, T](fn_1: Callable[P, T]) -> Callable[P, T]: ...
+@overload
+def compose_left[**P, T, T1](
+    fn_1: Callable[P, T], fn_2: Callable[[T], T1]
+) -> Callable[P, T1]: ...
+@overload
+def compose_left[**P, T, T1, T2](
+    fn_1: Callable[P, T], fn_2: Callable[[T], T1], fn_3: Callable[[T1], T2]
+) -> Callable[P, T2]: ...
+@overload
+def compose_left[**P, T, T1, T2, T3](
+    fn_1: Callable[P, T],
+    fn_2: Callable[[T], T1],
+    fn_3: Callable[[T1], T2],
+    fn_4: Callable[[T2], T3],
+) -> Callable[P, T3]: ...
+@overload
+def compose_left[**P, T, T1, T2, T3, T4](
+    fn_1: Callable[P, T],
+    fn_2: Callable[[T], T1],
+    fn_3: Callable[[T1], T2],
+    fn_4: Callable[[T2], T3],
+    fn_5: Callable[[T3], T4],
+) -> Callable[P, T4]: ...
 def compose_left(*funcs: Callable[..., Any]) -> Callable[..., Any]:
     """Compose functions to operate in series.
 
@@ -124,7 +149,8 @@ class curry:
     def __call__(self, *args: Any, **kwargs: Any) -> Any: ...
 
 def do[T](func: Callable[[T], Any], x: T) -> T:
-    """Runs ``func`` on ``x``, returns ``x``
+    """
+    Runs ``func`` on ``x``, returns ``x``
 
     Because the results of ``func`` are not returned, only the side
     effects of ``func`` are relevant.
@@ -183,7 +209,7 @@ class excepts(Exception):
         handler: Callable[[Exception], Any] = ...,
     ) -> None: ...
 
-def flip[T](func: Callable[..., T], a: Any, b: Any) -> T:
+def flip[P1, P2, T](func: Callable[[P1, P2], T], a: P2, b: P1) -> T:
     """Call the function call with the arguments flipped
 
     This function is curried.
@@ -278,6 +304,31 @@ def memoize[T](
     """
     ...
 
+@overload
+def pipe[**P, T](data: T, fn1: Callable[P, T]) -> T: ...
+@overload
+def pipe[**P, T, T1](data: T, fn1: Callable[P, T], fn2: Callable[[T], T1]) -> T1: ...
+@overload
+def pipe[**P, T, T1, T2](
+    data: T, fn1: Callable[P, T], fn2: Callable[[T], T1], fn3: Callable[[T1], T2]
+) -> T2: ...
+@overload
+def pipe[**P, T, T1, T2, T3](
+    data: T,
+    fn1: Callable[P, T],
+    fn2: Callable[[T], T1],
+    fn3: Callable[[T1], T2],
+    fn4: Callable[[T2], T3],
+) -> T3: ...
+@overload
+def pipe[**P, T, T1, T2, T3, T4](
+    data: T,
+    fn1: Callable[P, T],
+    fn2: Callable[[T], T1],
+    fn3: Callable[[T1], T2],
+    fn4: Callable[[T2], T3],
+    fn5: Callable[[T3], T4],
+) -> T4: ...
 def pipe(data: Any, *funcs: Callable[..., Any]) -> Any:
     """Pipe a value through a sequence of functions
 

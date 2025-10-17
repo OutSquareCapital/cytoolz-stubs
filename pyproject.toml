@@ -1,16 +1,14 @@
 [project]
-name = "cytoolz-stubs"
-version = "0.1.1"
-description = "Type stubs for cytoolz"
-readme = "README.md"
+description     = "Type stubs for cytoolz"
+name            = "cytoolz-stubs"
+readme          = "README.md"
 requires-python = ">=3.11"
+version         = "0.2"
 
 [build-system]
-requires = ["uv_build>=0.8.15,<0.9.0"]
 build-backend = "uv_build"
+requires      = ["uv_build>=0.8.15,<0.9.0"]
 
 
 [dependency-groups]
-dev = [
-    "cytoolz>=1.0.1",
-]
+dev = ["cytoolz>=1.0.1"]

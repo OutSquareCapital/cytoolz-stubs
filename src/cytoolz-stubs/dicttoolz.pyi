@@ -20,10 +20,6 @@ dicttoolz
 from collections.abc import Callable, Iterable, Mapping, MutableMapping, Sequence
 from typing import Any, overload
 
-type _KVPairs[K, V] = Iterable[tuple[K, V]]
-type _DictLike[K, V] = Mapping[K, V] | _KVPairs[K, V]
-type _DictLikeIterable[K, V] = Iterable[_DictLike[K, V]]
-
 @overload
 def assoc[K, V](
     d: Mapping[K, V],
@@ -291,22 +287,7 @@ def keymap[K, V, K1](
     """
     ...
 
-@overload
-def merge[K, V](
-    *dicts: _DictLike[K, V],
-    factory: Callable[[], MutableMapping[K, V]],
-) -> MutableMapping[K, V]: ...
-@overload
-def merge[K, V](*dicts: _DictLike[K, V]) -> dict[K, V]: ...
-@overload
-def merge[K, V](
-    dicts: _DictLikeIterable[K, V],
-    *,
-    factory: Callable[[], MutableMapping[K, V]],
-) -> MutableMapping[K, V]: ...
-@overload
-def merge[K, V](dicts: _DictLikeIterable[K, V]) -> dict[K, V]: ...
-def merge[K, V](*dicts: dict[K, V], **kwargs: Any) -> dict[K, V]:
+def merge[K, V](*dicts: Mapping[K, V], **kwargs: Any) -> dict[K, V]:
     """
     Merge a collection of dictionaries
 
@@ -323,31 +304,8 @@ def merge[K, V](*dicts: dict[K, V], **kwargs: Any) -> dict[K, V]:
     """
     ...
 
-@overload
 def merge_with[K, V](
-    func: Callable[[Iterable[V]], V],
-    *dicts: _DictLike[K, V],
-    factory: Callable[[], MutableMapping[K, V]],
-) -> MutableMapping[K, V]: ...
-@overload
-def merge_with[K, V](
-    func: Callable[[Iterable[V]], V],
-    *dicts: _DictLike[K, V],
-) -> dict[K, V]: ...
-@overload
-def merge_with[K, V](
-    func: Callable[[Iterable[V]], V],
-    dicts: _DictLikeIterable[K, V],
-    *,
-    factory: Callable[[], MutableMapping[K, V]],
-) -> MutableMapping[K, V]: ...
-@overload
-def merge_with[K, V](
-    func: Callable[[Iterable[V]], V],
-    dicts: _DictLikeIterable[K, V],
-) -> dict[K, V]: ...
-def merge_with[K, V](
-    func: Callable[[list[V]], V], *dicts: dict[K, V], **kwargs: Any
+    func: Callable[[list[V]], V], *dicts: Mapping[K, V], **kwargs: Any
 ) -> dict[K, V]:
     """
     Merge dictionaries and apply function to combined values

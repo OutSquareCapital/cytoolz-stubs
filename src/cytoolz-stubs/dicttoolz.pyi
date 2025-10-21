@@ -21,13 +21,13 @@ from collections.abc import Callable, Iterable, Mapping, MutableMapping, Sequenc
 from typing import Any, TypeGuard, overload
 
 @overload
-def assoc[K, V](
+def assoc[K, V, F: MutableMapping[Any, Any]](
     d: Mapping[K, V],
     key: K,
     value: V,
     *,
-    factory: Callable[[], MutableMapping[K, V]],
-) -> MutableMapping[K, V]: ...
+    factory: Callable[[], F],
+) -> F: ...
 @overload
 def assoc[K, V](d: Mapping[K, V], key: K, value: V) -> dict[K, V]: ...
 def assoc[K, V](d: dict[K, V], key: K, value: V) -> dict[K, V]:
@@ -44,13 +44,13 @@ def assoc[K, V](d: dict[K, V], key: K, value: V) -> dict[K, V]:
     ...
 
 @overload
-def assoc_in[M_out: MutableMapping[Any, Any]](
+def assoc_in[F: MutableMapping[Any, Any]](
     d: Mapping[Any, Any],
     keys: Sequence[Any],
     value: Any,
     *,
-    factory: Callable[[], M_out],
-) -> M_out: ...
+    factory: Callable[[], F],
+) -> F: ...
 @overload
 def assoc_in(
     d: Mapping[Any, Any],
@@ -61,7 +61,7 @@ def assoc_in[K, V](
     d: dict[K, V],
     keys: Iterable[K] | K,
     value: V,
-    factory: Callable[[], dict[Any, Any]] = dict,
+    factory: Callable[[], dict[K, V]] = dict,
 ) -> dict[K, V]:
     """
     Return a new dict with new, potentially nested, key value pair
@@ -79,14 +79,18 @@ def assoc_in[K, V](
     ...
 
 @overload
-def dissoc[K, V](
+def dissoc[K, V, F: MutableMapping[Any, Any]](
     d: Mapping[K, V],
     *keys: K,
-    factory: Callable[[], MutableMapping[K, V]],
-) -> MutableMapping[K, V]: ...
+    factory: Callable[[], F],
+) -> F: ...
 @overload
-def dissoc[K, V](d: Mapping[K, V], *keys: K) -> dict[K, V]: ...
-def dissoc[K, V](d: dict[K, V], *keys: K, **kwargs: Any) -> dict[K, V]:
+def dissoc[K, V](
+    d: Mapping[K, V], *keys: K, factory: Callable[[], dict[K, V]] = dict
+) -> dict[K, V]: ...
+def dissoc[K, V](
+    d: dict[K, V], *keys: K, factory: Callable[[], dict[K, V]] = dict
+) -> dict[K, V]:
     """
     Return a new dict with the given key(s) removed.
 
@@ -160,13 +164,13 @@ def get_in[K, V](
 def itemfilter[K, V](
     predicate: Callable[[tuple[K, V]], bool],
     d: Mapping[K, V],
-    factory: type[dict[K, V]] = dict,
+    factory: Callable[[], dict[K, V]] = dict,
 ) -> MutableMapping[K, V]: ...
 @overload
 def itemfilter[K, V, U](
     predicate: Callable[[tuple[K, V]], TypeGuard[U]],
     d: Mapping[K, V],
-    factory: type[dict[K, U]] = dict,
+    factory: Callable[[], dict[K, U]] = dict,
 ) -> dict[K, U]: ...
 @overload
 def itemfilter[K, V, F: MutableMapping[Any, Any]](
@@ -177,7 +181,7 @@ def itemfilter[K, V, F: MutableMapping[Any, Any]](
 def itemfilter[K, V](
     predicate: Callable[[tuple[K, V]], bool] | Callable[[tuple[K, V]], TypeGuard[Any]],
     d: Mapping[K, V],
-    factory: type[dict[K, Any]] = dict,
+    factory: Callable[[], dict[K, Any]] = dict,
 ) -> dict[K, Any]:
     """
     Filter items in dictionary by item
@@ -198,12 +202,12 @@ def itemfilter[K, V](
     ...
 
 @overload
-def itemmap[K, V, K1, V1](
+def itemmap[K, V, K1, V1, F: MutableMapping[Any, Any]](
     itemfunc: Callable[[tuple[K, V]], tuple[K1, V1]],
     d: Mapping[K, V],
     *,
-    factory: Callable[[], MutableMapping[K1, V1]],
-) -> MutableMapping[K1, V1]: ...
+    factory: Callable[[], F],
+) -> F: ...
 @overload
 def itemmap[K, V, K1, V1](
     itemfunc: Callable[[tuple[K, V]], tuple[K1, V1]],
@@ -237,13 +241,13 @@ def itemmap[K, V, K1, V1](
 def keyfilter[K, V](
     predicate: Callable[[K], bool],
     d: Mapping[K, V],
-    factory: type[dict[K, V]] = dict,
+    factory: Callable[[], dict[K, V]] = dict,
 ) -> dict[K, V]: ...
 @overload
 def keyfilter[K, V, U](
     predicate: Callable[[K], TypeGuard[U]],
     d: Mapping[K, V],
-    factory: type[dict[K, V]] = dict,
+    factory: Callable[[], dict[K, V]] = dict,
 ) -> dict[K, U]: ...
 @overload
 def keyfilter[K, V, F: MutableMapping[Any, Any]](
@@ -254,7 +258,7 @@ def keyfilter[K, V, F: MutableMapping[Any, Any]](
 def keyfilter[K, V](
     predicate: Callable[[K], bool | TypeGuard[Any]],
     d: Mapping[K, V],
-    factory: type[dict[K, V]] = dict,
+    factory: Callable[[], dict[K, V]] = dict,
 ) -> dict[K, Any]:
     """
     Filter items in dictionary by key
@@ -276,7 +280,7 @@ def keymap[K, K1, V](
     keyfunc: Callable[[K], K1],
     d: Mapping[K, V],
     *,
-    factory: Callable[[], MutableMapping[K1, V]],
+    factory: Callable[[], MutableMapping[K1, V]] = dict,
 ) -> MutableMapping[K1, V]: ...
 @overload
 def keymap[K, K1, V](
@@ -286,7 +290,7 @@ def keymap[K, K1, V](
 def keymap[K, V, K1](
     func: Callable[[K], K1],
     d: dict[K, V],
-    factory: Callable[[], dict[Any, Any]] = ...,
+    factory: Callable[[], dict[K1, V]] = dict,
 ) -> dict[K1, V]:
     """
     Apply function to keys of dictionary
@@ -301,7 +305,9 @@ def keymap[K, V, K1](
     """
     ...
 
-def merge[K, V](*dicts: Mapping[K, V], **kwargs: Any) -> dict[K, V]:
+def merge[K, V](
+    *dicts: Mapping[K, V], factory: Callable[[], dict[K, V]] = dict
+) -> dict[K, V]:
     """
     Merge a collection of dictionaries
 
@@ -319,7 +325,9 @@ def merge[K, V](*dicts: Mapping[K, V], **kwargs: Any) -> dict[K, V]:
     ...
 
 def merge_with[K, V](
-    func: Callable[[list[V]], V], *dicts: Mapping[K, V], **kwargs: Any
+    func: Callable[[list[V]], V],
+    *dicts: Mapping[K, V],
+    factory: Callable[[], dict[K, V]] = dict,
 ) -> dict[K, V]:
     """
     Merge dictionaries and apply function to combined values
@@ -338,30 +346,13 @@ def merge_with[K, V](
     """
     ...
 
-@overload
-def update_in[M_out: MutableMapping[Any, Any]](
-    d: Mapping[Any, Any],
+def update_in[T: Mapping[Any, Any]](
+    d: T,
     keys: Sequence[Any],
     func: Callable[[Any], Any],
-    *,
-    default: Any | None = ...,
-    factory: Callable[[], M_out],
-) -> M_out: ...
-@overload
-def update_in(
-    d: Mapping[Any, Any],
-    keys: Sequence[Any],
-    func: Callable[[Any], Any],
-    *,
-    default: Any | None = ...,
-) -> dict[Any, Any]: ...
-def update_in[K, V](
-    d: dict[K, V],
-    keys: Iterable[K],
-    func: Callable[..., V],
-    default: V | None = None,
-    factory: Callable[[], dict[K, V]] = dict,
-) -> dict[K, V]:
+    default: Any | None = None,
+    factory: Callable[[], T] = dict,
+) -> T:
     """
     Update value in a (potentially) nested dictionary
 
@@ -403,13 +394,13 @@ def update_in[K, V](
 def valfilter[K, V](
     predicate: Callable[[V], bool],
     d: Mapping[K, V],
-    factory: type[MutableMapping[K, V]] = dict,
+    factory: Callable[[], MutableMapping[K, V]] = dict,
 ) -> dict[K, V]: ...
 @overload
 def valfilter[K, V, U](
     predicate: Callable[[V], TypeGuard[U]],
     d: Mapping[K, V],
-    factory: type[MutableMapping[K, U]] = dict,
+    factory: Callable[[], MutableMapping[K, U]] = dict,
 ) -> dict[K, U]: ...
 @overload
 def valfilter[K, V, F: MutableMapping[Any, Any]](
@@ -420,7 +411,7 @@ def valfilter[K, V, F: MutableMapping[Any, Any]](
 def valfilter[K, V](
     predicate: Callable[[V], bool] | Callable[[V], TypeGuard[Any]],
     d: Mapping[K, V],
-    factory: type[MutableMapping[K, Any]] = dict,
+    factory: Callable[[], MutableMapping[K, Any]] = dict,
 ) -> dict[K, Any]:
     """
     Filter items in dictionary by value

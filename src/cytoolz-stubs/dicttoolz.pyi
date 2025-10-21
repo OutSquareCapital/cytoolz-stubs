@@ -18,7 +18,7 @@ dicttoolz
 """
 
 from collections.abc import Callable, Iterable, Mapping, MutableMapping, Sequence
-from typing import Any, overload
+from typing import Any, TypeGuard, overload
 
 @overload
 def assoc[K, V](
@@ -160,17 +160,25 @@ def get_in[K, V](
 def itemfilter[K, V](
     predicate: Callable[[tuple[K, V]], bool],
     d: Mapping[K, V],
-    *,
-    factory: Callable[[], MutableMapping[K, V]],
+    factory: type[dict[K, V]] = dict,
 ) -> MutableMapping[K, V]: ...
 @overload
-def itemfilter[K, V](
+def itemfilter[K, V, U](
+    predicate: Callable[[tuple[K, V]], TypeGuard[U]],
+    d: Mapping[K, V],
+    factory: type[dict[K, U]] = dict,
+) -> dict[K, U]: ...
+@overload
+def itemfilter[K, V, F: MutableMapping[Any, Any]](
     predicate: Callable[[tuple[K, V]], bool],
     d: Mapping[K, V],
-) -> dict[K, V]: ...
+    factory: F,
+) -> F: ...
 def itemfilter[K, V](
-    predicate: Callable[[tuple[K, V]], bool], d: dict[K, V]
-) -> dict[K, V]:
+    predicate: Callable[[tuple[K, V]], bool] | Callable[[tuple[K, V]], TypeGuard[Any]],
+    d: Mapping[K, V],
+    factory: type[dict[K, Any]] = dict,
+) -> dict[K, Any]:
     """
     Filter items in dictionary by item
 
@@ -229,19 +237,25 @@ def itemmap[K, V, K1, V1](
 def keyfilter[K, V](
     predicate: Callable[[K], bool],
     d: Mapping[K, V],
-    *,
-    factory: Callable[[], MutableMapping[K, V]],
-) -> MutableMapping[K, V]: ...
+    factory: type[dict[K, V]] = dict,
+) -> dict[K, V]: ...
 @overload
-def keyfilter[K, V](
+def keyfilter[K, V, U](
+    predicate: Callable[[K], TypeGuard[U]],
+    d: Mapping[K, V],
+    factory: type[dict[K, V]] = dict,
+) -> dict[K, U]: ...
+@overload
+def keyfilter[K, V, F: MutableMapping[Any, Any]](
     predicate: Callable[[K], bool],
     d: Mapping[K, V],
-) -> dict[K, V]: ...
+    factory: F,
+) -> F: ...
 def keyfilter[K, V](
-    predicate: Callable[[K], bool],
-    d: dict[K, V],
-    factory: Callable[[], dict[Any, Any]] = ...,
-) -> dict[K, V]:
+    predicate: Callable[[K], bool | TypeGuard[Any]],
+    d: Mapping[K, V],
+    factory: type[dict[K, V]] = dict,
+) -> dict[K, Any]:
     """
     Filter items in dictionary by key
 
@@ -389,19 +403,25 @@ def update_in[K, V](
 def valfilter[K, V](
     predicate: Callable[[V], bool],
     d: Mapping[K, V],
-    *,
-    factory: Callable[[], MutableMapping[K, V]],
-) -> MutableMapping[K, V]: ...
+    factory: type[MutableMapping[K, V]] = dict,
+) -> dict[K, V]: ...
 @overload
-def valfilter[K, V](
+def valfilter[K, V, U](
+    predicate: Callable[[V], TypeGuard[U]],
+    d: Mapping[K, V],
+    factory: type[MutableMapping[K, U]] = dict,
+) -> dict[K, U]: ...
+@overload
+def valfilter[K, V, F: MutableMapping[Any, Any]](
     predicate: Callable[[V], bool],
     d: Mapping[K, V],
-) -> dict[K, V]: ...
+    factory: F,
+) -> F: ...
 def valfilter[K, V](
-    predicate: Callable[[V], bool],
-    d: dict[K, V],
-    factory: Callable[[], dict[Any, Any]] = ...,
-) -> dict[K, V]:
+    predicate: Callable[[V], bool] | Callable[[V], TypeGuard[Any]],
+    d: Mapping[K, V],
+    factory: type[MutableMapping[K, Any]] = dict,
+) -> dict[K, Any]:
     """
     Filter items in dictionary by value
 

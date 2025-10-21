@@ -19,7 +19,11 @@ def accumulate[T](
 
     >>> from functools import partial, reduce
     >>> sum = partial(reduce, add)
-    >>> cumsum = partial(accumulate, add)
+    >>> sum([1, 2, 3, 4, 5])
+    15
+    >>> cumsum = partial(cz.itertoolz.accumulate, add)
+    >>> list(cumsum([1, 2, 3, 4, 5]))
+    [1, 3, 6, 10, 15]
 
     Accumulate also takes an optional argument that will be used as the first
     value. This is similar to reduce.
@@ -168,7 +172,6 @@ def get(ind: Iterable[int], seq: Sequence[Any], default: Any = ...) -> Iterator[
     Get element in a sequence or dict
 
     Provides standard indexing
-
     >>> import cytoolz as cz
     >>> cz.itertoolz.get(1, 'ABC')       # Same as 'ABC'[1]
     'B'
@@ -176,21 +179,19 @@ def get(ind: Iterable[int], seq: Sequence[Any], default: Any = ...) -> Iterator[
     ('B', 'C')
 
     Pass a list to get multiple values
-    >>> get([1, 2], 'ABC')  # ('ABC'[1], 'ABC'[2])
+    >>> cz.itertoolz.get([1, 2], 'ABC')  # ('ABC'[1], 'ABC'[2])
     ('B', 'C')
 
     Works on any value that supports indexing/getitem.
 
     For example here we see that it works with dictionaries
-    >>> phonebook = {'Alice':  '555-1234',
-    ...            'Bob':    '555-5678',
-    ...            'Charlie':'555-9999'}
-
+    >>> phonebook = {"Alice": "555-1234", "Bob": "555-5678", "Charlie": "555-9999"}
     >>> cz.itertoolz.get('Alice', phonebook)
     '555-1234'
 
     >>> cz.itertoolz.get(['Alice', 'Bob'], phonebook)
     ('555-1234', '555-5678')
+
     Provide a default for missing values
     >>> cz.itertoolz.get(['Alice', 'Dennis'], phonebook, None)
     ('555-1234', None)
@@ -201,32 +202,35 @@ def get(ind: Iterable[int], seq: Sequence[Any], default: Any = ...) -> Iterator[
     """
     ...
 
-def groupby[T, KT](key: Callable[[T], KT], seq: Iterable[T]) -> dict[KT, list[T]]:
+def groupby[T, K](key: Callable[[T], K] | K, seq: Iterable[T]) -> dict[K, list[T]]:
     """
     Group a collection by a key function
 
     >>> import cytoolz as cz
+    >>> from typing import TypedDict
     >>> names = ["Alice", "Bob", "Charlie", "Dan", "Edith", "Frank"]
     >>> cz.itertoolz.groupby(len, names)
     {3: ['Bob', 'Dan'], 5: ['Alice', 'Edith', 'Frank'], 7: ['Charlie']}
-
-    >>> iseven = lambda x: x % 2 == 0
+    >>>
+    >>> def iseven(x: int) -> bool:
+    ...     return x % 2 == 0
     >>> cz.itertoolz.groupby(iseven, [1, 2, 3, 4, 5, 6, 7, 8])
     {False: [1, 3, 5, 7], True: [2, 4, 6, 8]}
 
     Non-callable keys imply grouping on a member.
-
-    >>> cz.itertoolz.groupby(
-    ...     "gender",
-    ...     [
-    ...         {"name": "Alice", "gender": "F"},
-    ...         {"name": "Bob", "gender": "M"},
-    ...         {"name": "Charlie", "gender": "M"},
-    ...     ],
-    ... )
+    >>> class Person(TypedDict):
+    ...     name: str
+    ...     gender: str
+    >>> data: list[Person] = [
+    ...     {"name": "Alice", "gender": "F"},
+    ...     {"name": "Bob", "gender": "M"},
+    ...     {"name": "Charlie", "gender": "M"},
+    ... ]
+    >>> result = cz.itertoolz.groupby("gender", data)
+    >>> result
     {'F': [{'gender': 'F', 'name': 'Alice'}],
-     'M': [{'gender': 'M', 'name': 'Bob'},
-           {'gender': 'M', 'name': 'Charlie'}]}
+    'M': [{'gender': 'M', 'name': 'Bob'},
+        {'gender': 'M', 'name': 'Charlie'}]}
 
     Not to be confused with ``itertools.groupby``
 
@@ -308,7 +312,8 @@ def iterate[T, T1](func: Callable[[T], T1], x: T) -> Iterator[T1]:
     >>> next(counter)
     2
 
-    >>> double = lambda x: x * 2
+    >>> def double(x: int) -> int:
+    ...     return x * 2
     >>> powers_of_two = cz.itertoolz.iterate(double, 1)
     >>> next(powers_of_two)
     1
@@ -322,9 +327,9 @@ def iterate[T, T1](func: Callable[[T], T1], x: T) -> Iterator[T1]:
     ...
 
 def join[T1, T2, KT](
-    leftkey: Callable[[T1], KT],
+    leftkey: Callable[[T1], KT] | KT,
     leftseq: Iterable[T1],
-    rightkey: Callable[[T2], KT],
+    rightkey: Callable[[T2], KT] | KT,
     rightseq: Iterable[T2],
     left_default: Any = ...,
     right_default: Any = ...,
@@ -332,9 +337,9 @@ def join[T1, T2, KT](
     """
     Join two sequences on common attributes
 
-    This is a semi-streaming operation.  The LEFT sequence is fully evaluated
-    and placed into memory.  The RIGHT sequence is evaluated lazily and so can
-    be arbitrarily large.
+    This is a semi-streaming operation.
+    - The LEFT sequence is fully evaluated and placed into memory.
+    - The RIGHT sequence is evaluated lazily and so can be arbitrarily large.
 
     Note:
         If right_default is defined, then unique keys of rightseq
@@ -348,7 +353,6 @@ def join[T1, T2, KT](
     ...     ("Zhao", "Alice"),
     ...     ("Zhao", "Edith"),
     ... ]
-
     >>> cities = [
     ...     ("Alice", "NYC"),
     ...     ("Alice", "Chicago"),
@@ -359,29 +363,30 @@ def join[T1, T2, KT](
     ... ]
     >>> # Vacation opportunities
     >>> # In what cities do people have friends?
-    >>> result = cz.itertoolz.join(second, friends, first, cities)
-    >>> for (a, b), (c, d) in sorted(cz.itertoolz.unique(result)):
-    ...     print((a, d))
-    ('Alice', 'Berlin')
-    ('Alice', 'Paris')
-    ('Alice', 'Shanghai')
-    ('Edith', 'Chicago')
-    ('Edith', 'NYC')
-    ('Zhao', 'Chicago')
-    ('Zhao', 'NYC')
-    ('Zhao', 'Berlin')
-    ('Zhao', 'Paris')
+    >>> result = cz.itertoolz.join(cz.itertoolz.second, friends, cz.itertoolz.first, cities)
+    >>> sorted_res = sorted(cz.itertoolz.unique(result))
+    >>> [(i[0][0], i[1][1]) for i in sorted_res]
+    [
+    ('Alice', 'Berlin'),
+    ('Alice', 'Paris'),
+    ('Alice', 'Shanghai'),
+    ('Edith', 'Chicago'),
+    ('Edith', 'NYC'),
+    ('Zhao', 'Chicago'),
+    ('Zhao', 'NYC'),
+    ('Zhao', 'Berlin'),
+    ('Zhao', 'Paris'),
+    ]
 
     Specify outer joins with keyword arguments ``left_default`` and/or
-    ``right_default``.  Here is a full outer join in which unmatched elements
-    are paired with None.
+    ``right_default``.
 
-    >>> identity = lambda x: x
+    Here is a full outer join in which unmatched elements are paired with None.
     >>> list(
     ...     cz.itertoolz.join(
-    ...         identity,
+    ...         cz.functoolz.identity,
     ...         [1, 2, 3],
-    ...         identity,
+    ...         cz.functoolz.identity,
     ...         [2, 3, 4],
     ...         left_default=None,
     ...         right_default=None,
@@ -389,15 +394,23 @@ def join[T1, T2, KT](
     ... )
     [(2, 2), (3, 3), (None, 4), (1, None)]
 
-    Usually the key arguments are callables to be applied to the sequences.  If
-    the keys are not obviously callable then it is assumed that indexing was
-    intended, e.g. the following is a legal change.
-    The join is implemented as a hash join and the keys of leftseq must be
-    hashable. Additionally, if right_default is defined, then keys of rightseq
-    must also be hashable.
+    Usually the key arguments are callables to be applied to the sequences.
 
-    >>> # result = join(second, friends, first, cities)
-    >>> result = cz.itertoolz.join(1, friends, 0, cities)
+    If the keys are not obviously callable then it is assumed that indexing was
+    intended, e.g. the following is a legal change.
+
+    The join is implemented as a hash join and the keys of leftseq must be hashable.
+
+    Additionally, if right_default is defined, then keys of rightseq must also be hashable.
+    >>> join_res = cz.itertoolz.join(cz.itertoolz.second, friends, cz.itertoolz.first, cities)
+    >>> join_head = cz.itertoolz.take(2, join_res)
+    >>> list(join_head)
+    [(('Edith', 'Alice'), ('Alice', 'NYC')), (('Zhao', 'Alice'), ('Alice', 'NYC'))]
+    >>> join_res = cz.itertoolz.join(1, friends, 0, cities)
+    >>> head_res = cz.itertoolz.take(2, join_res)
+    >>> list(head_res)
+    [(('Edith', 'Alice'), ('Alice', 'NYC')), (('Zhao', 'Alice'), ('Alice', 'NYC'))]
+
     """
     ...
 
@@ -423,7 +436,7 @@ def mapcat[T1, T2](
     """
     ...
 
-def merge_sorted[T](*seqs: Iterable[T], **kwargs: Any) -> Iterator[T]:
+def merge_sorted[T](*seqs: Iterable[T], key: Callable[[T], Any] = ...) -> Iterator[T]:
     """
     Merge and sort a collection of sorted collections
 
@@ -434,6 +447,7 @@ def merge_sorted[T](*seqs: Iterable[T], **kwargs: Any) -> Iterator[T]:
 
     >>> "".join(cz.itertoolz.merge_sorted("abc", "abc", "abc"))
     'aaabbbccc'
+
     The "key" function used to sort the input may be passed as a keyword.
     >>> list(cz.itertoolz.merge_sorted([2, 3], [1, 3], key=lambda x: x // 3))
     [2, 1, 3, 3]
@@ -558,39 +572,42 @@ def random_sample[T](
     Returns a lazy iterator of random items from seq.
 
     ``random_sample`` considers each item independently and without
-    replacement. See below how the first time it returned 13 items and the
-    next time it returned 6 items.
+    replacement.
+
+    See below how the first time it returned 13 items and the next time it returned 6 items.
 
     >>> import cytoolz as cz
     >>> seq = list(range(100))
-    >>> list(cz.itertoolz.random_sample(0.1, seq))
+    >>> list(cz.itertoolz.random_sample(0.1, seq)) # doctest: +SKIP
     [6, 9, 19, 35, 45, 50, 58, 62, 68, 72, 78, 86, 95]
-    >>> list(cz.itertoolz.random_sample(0.1, seq))
+    >>> list(cz.itertoolz.random_sample(0.1, seq)) # doctest: +SKIP
     [6, 44, 54, 61, 69, 94]
-    Providing an integer seed for ``random_state`` will result in
-    deterministic sampling. Given the same seed it will return the same sample
-    every time.
 
-    >>> list(cz.itertoolz.random_sample(0.1, seq, random_state=2016))
+    Providing an integer seed for ``random_state`` will result in
+    deterministic sampling.
+
+    Given the same seed it will return the same sample every time.
+
+    >>> list(cz.itertoolz.random_sample(0.1, seq, random_state=2016)) # doctest: +SKIP
     [7, 9, 19, 25, 30, 32, 34, 48, 59, 60, 81, 98]
-    >>> list(cz.itertoolz.random_sample(0.1, seq, random_state=2016))
+    >>> list(cz.itertoolz.random_sample(0.1, seq, random_state=2016)) # doctest: +SKIP
     [7, 9, 19, 25, 30, 32, 34, 48, 59, 60, 81, 98]
+
     ``random_state`` can also be any object with a method ``random`` that
     returns floats between 0.0 and 1.0 (exclusive).
-
     >>> from random import Random
     >>> randobj = Random(2016)
-    >>> list(cz.itertoolz.random_sample(0.1, seq, random_state=randobj))
+    >>> list(cz.itertoolz.random_sample(0.1, seq, random_state=randobj)) # doctest: +SKIP
     [7, 9, 19, 25, 30, 32, 34, 48, 59, 60, 81, 98]
     """
     ...
 
-def reduceby[T, KT, VT](
-    key: Callable[[T], KT],
+def reduceby[T, K, VT](
+    key: Callable[[T], K] | K,
     binop: Callable[[VT, T], VT],
     seq: Iterable[T],
     init: Any = ...,
-) -> dict[KT, VT]:
+) -> dict[K, VT]:
     """
     Perform a simultaneous groupby and reduction
 
@@ -619,29 +636,34 @@ def reduceby[T, KT, VT](
     ---------------
     >>> import cytoolz as cz
     >>> from operator import add, mul
-    >>> iseven = lambda x: x % 2 == 0
-
+    >>>
+    >>> def iseven(x: int) -> bool:
+    ...     return x % 2 == 0
     >>> data = [1, 2, 3, 4, 5]
-
     >>> cz.itertoolz.reduceby(iseven, add, data)
     {False: 9, True: 6}
-
     >>> cz.itertoolz.reduceby(iseven, mul, data)
     {False: 15, True: 8}
 
     Complex Example
     ---------------
-
-    >>> projects = [
+    >>> from typing import TypedDict
+    >>> class Project(TypedDict):
+    ...     name: str
+    ...     state: str
+    ...     cost: int
+    >>> projects: list[Project] = [
     ...     {"name": "build roads", "state": "CA", "cost": 1000000},
     ...     {"name": "fight crime", "state": "IL", "cost": 100000},
     ...     {"name": "help farmers", "state": "IL", "cost": 2000000},
     ...     {"name": "help farmers", "state": "CA", "cost": 200000},
     ... ]
+    >>> def acc(accum: int, proj: Project) -> int:
+    ...     return accum + proj["cost"]
 
     >>> cz.itertoolz.reduceby(
     ...     "state",
-    ...     lambda acc, x: acc + x["cost"],
+    ...     acc,
     ...     projects,
     ...     0,
     ... )
@@ -656,7 +678,7 @@ def reduceby[T, KT, VT](
 
     >>> cz.itertoolz.reduceby(iseven, set_add, [1, 2, 3, 4, 1, 2, 3], set)
     {True:  set([2, 4]),
-     False: set([1, 3])}
+    False: set([1, 3])}
     """
     ...
 
@@ -687,13 +709,15 @@ def sliding_window[T](n: int, seq: Iterable[T]) -> Iterator[tuple[T, ...]]:
     A sequence of overlapping subsequences
 
     >>> import cytoolz as cz
+    >>> from collections.abc import Sequence
     >>> list(cz.itertoolz.sliding_window(2, [1, 2, 3, 4]))
     [(1, 2), (2, 3), (3, 4)]
 
     This function creates a sliding window suitable for transformations like
     sliding means / smoothing
 
-    >>> mean = lambda seq: float(sum(seq)) / len(seq)
+    >>> def mean(seq: Sequence[float]) -> float:
+    ...     return float(sum(seq)) / len(seq)
     >>> list(map(mean, cz.itertoolz.sliding_window(2, [1, 2, 3, 4])))
     [1.5, 2.5, 3.5]
     """

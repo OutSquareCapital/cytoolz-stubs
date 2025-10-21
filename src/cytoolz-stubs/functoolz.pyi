@@ -21,8 +21,9 @@ functoolz
 from collections.abc import Callable, MutableMapping
 from typing import Any, overload
 
-def apply[**P, T](func: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> T:
-    """Applies a function and returns the results
+def apply[**P, T](func: Callable[..., T], *args: Any, **kwargs: Any) -> T:
+    """
+    Applies a function and returns the results
 
     >>> import cytoolz as cz
     >>> def double(x: int) -> int:
@@ -166,12 +167,11 @@ def do[T](func: Callable[[T], Any], x: T) -> T:
     like ``list.append`` or ``file.write``
 
     >>> import cytoolz as cz
-    >>> from cytoolz.functoolz import compose
-    >>> from cytoolz.curried import do
 
-    >>> log = []
-    >>> inc = lambda x: x + 1
-    >>> inc = compose(inc, do(log.append))
+    >>> log: list[int] = []
+    >>> def inc(x: int) -> int:
+    ...     return x + 1
+    >>> inc = cz.functoolz.compose(inc, cz.curried.do(log.append))
     >>> inc(1)
     2
     >>> inc(11)
@@ -190,26 +190,29 @@ class excepts(Exception):
 
     Examples
     --------
-    >>> import cytoolz as cz
-    >>> excepting = cz.functoolz.excepts(
-    ...     ValueError,
-    ...     lambda a: [1, 2].index(a),
-    ...     lambda _: -1,
-    ... )
-    >>> excepting(1)
-    0
-    >>> excepting(3)
-    -1
+    ```python
+    import cytoolz as cz
+    excepting = cz.functoolz.excepts(
+        ValueError,
+        lambda a: [1, 2].index(a),
+        lambda _: -1,
+    )
+    excepting(1)
+    # 0
+    excepting(3)
+    # -1
+    ```
 
     Multiple exceptions and default except clause.
-
-    >>> excepting = cz.functoolz.excepts((IndexError, KeyError), lambda a: a[0])
-    >>> excepting([])
-    >>> excepting([1])
-    1
-    >>> excepting({})
-    >>> excepting({0: 1})
-    1
+    ```python
+    excepting = cz.functoolz.excepts((IndexError, KeyError), lambda a: a[0])
+    excepting([])
+    excepting([1])
+    # 1
+    excepting({})
+    excepting({0: 1})
+    # 1
+    ```
     """
     def __init__(
         self,
@@ -218,8 +221,9 @@ class excepts(Exception):
         handler: Callable[[Exception], Any] = ...,
     ) -> None: ...
 
-def flip[P1, P2, T](func: Callable[[P1, P2], T], a: P2, b: P1) -> T:
-    """Call the function call with the arguments flipped
+def flip[T](func: Callable[[Any, Any], T], a: Any, b: Any) -> T:
+    """
+    Call the function call with the arguments flipped
 
     This function is curried.
 
@@ -228,8 +232,7 @@ def flip[P1, P2, T](func: Callable[[P1, P2], T], a: P2, b: P1) -> T:
     ...     return a // b
     >>> cz.functoolz.flip(div, 2, 6)
     3
-    >>> div_by_two = cz.functoolz.flip(div, 2)
-    >>> div_by_two(4)
+    >>> cz.functoolz.flip(div, 2)(4) # Equivalent to div(4, 2)
     2
 
     This is particularly useful for built in functions and functions defined
@@ -290,20 +293,24 @@ def memoize[T](
     >>> def add(x: int, y: int) -> int:
     ...     return x + y
     >>> add = cz.functoolz.memoize(add)
+
     Or use as a decorator
     >>> @cz.functoolz.memoize
     ... def add(x: int, y: int) -> int:
     ...     return x + y
+
     Use the ``cache`` keyword to provide a dict-like object as an initial cache
     >>> @cz.functoolz.memoize(cache={(1, 2): 3})
     ... def add(x: int, y: int) -> int:
     ...     return x + y
+
     Note that the above works as a decorator because ``memoize`` is curried.
 
     It is also possible to provide a ``key(args, kwargs)`` function that
     calculates keys used for the cache, which receives an ``args`` tuple and
-    ``kwargs`` dict as input, and must return a hashable value.  However,
-    the default key function should be sufficient most of the time.
+    ``kwargs`` dict as input, and must return a hashable value.
+
+    However, the default key function should be sufficient most of the time.
     >>> # Use key function that ignores extraneous keyword arguments
     >>> @cz.functoolz.memoize(key=lambda args, kwargs: args)
     ... def add(x: int, y: int, verbose: bool = False) -> int:

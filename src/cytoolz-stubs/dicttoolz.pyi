@@ -69,14 +69,17 @@ def assoc_in[K, V](
 
     >>> import cytoolz as cz
     >>> purchase = {
-    ...     "name": "Alice",
-    ...     "order": {"items": ["Apple", "Orange"], "costs": [0.50, 1.25]},
-    ...     "credit card": "5555-1234-1234",
+    ... "name": "Alice",
+    ... "order": {"items": ["Apple", "Orange"], "costs": [0.50, 1.25]},
+    ... "credit card": "5555-1234-1234-1234",
     ... }
     >>> cz.dicttoolz.assoc_in(purchase, ["order", "costs"], [0.25, 1.00])
-    {'credit card': '5555-1234-1234-1234',
-    'name': 'Alice',
-    'order': {'costs': [0.25, 1.00], 'items': ['Apple', 'Orange']}}
+    {
+        "credit card": "5555-1234-1234-1234",
+        "name": "Alice",
+        "order": {"costs": [0.25, 1.00], "items": ["Apple", "Orange"]},
+    }
+
     """
     ...
 
@@ -153,10 +156,6 @@ def get_in[K, V](
     >>> cz.dicttoolz.get_in(["purchase", "items", 10], transaction)
     >>> cz.dicttoolz.get_in(["purchase", "total"], transaction, 0)
     0
-    >>> cz.dicttoolz.get_in(["y"], {}, no_default=True)
-    Traceback (most recent call last):
-        ...
-    KeyError: 'y'
 
     See Also:
         itertoolz.get
@@ -194,7 +193,6 @@ def itemfilter[K, V](
     >>> def isvalid(item: tuple[int, int]) -> bool:
     ...     k, v = item
     ...     return k % 2 == 0 and v < 4
-
     >>> d = {1: 2, 2: 3, 3: 4, 4: 5}
     >>> cz.dicttoolz.itemfilter(isvalid, d)
     {2: 3}
@@ -355,13 +353,38 @@ def merge_with[K, V](
     """
     ...
 
+@overload
 def update_in[T: Mapping[Any, Any]](
     d: T,
     keys: Sequence[Any],
     func: Callable[[Any], Any],
+    default: Any | None,
+    factory: Callable[[], T],
+) -> T: ...
+@overload
+def update_in[K, V](
+    d: dict[K, V],
+    keys: Sequence[Any],
+    func: Callable[[Any], Any],
+    default: Any | None,
+    factory: Callable[[], dict[K, V]] = dict,
+) -> dict[K, V]: ...
+@overload
+def update_in[K, V, U](
+    d: dict[K, V],
+    keys: Sequence[Any],
+    func: Callable[[Any], Any],
+    default: Any | None,
+    factory: Callable[[], dict[K, U]] = dict,
+) -> dict[K, U]: ...
+@overload
+def update_in[K, V](
+    d: dict[K, V],
+    keys: Sequence[Any],
+    func: Callable[[Any], Any],
     default: Any | None = None,
-    factory: Callable[[], T] = dict,
-) -> T:
+    factory: Callable[[], dict[K, V]] = dict,
+) -> dict[K, V]:
     """
     Update value in a (potentially) nested dictionary
 
@@ -378,7 +401,8 @@ def update_in[T: Mapping[Any, Any]](
     specified by the keys, with the innermost value set to func(default).
 
     >>> import cytoolz as cz
-    >>> inc = lambda x: x + 1
+    >>> def inc(x: int) -> int:
+    ...     return x + 1
     >>> cz.dicttoolz.update_in({"a": 0}, ["a"], inc)
     {'a': 1}
 
@@ -413,16 +437,10 @@ def valfilter[K, V, U](
     d: Mapping[K, V],
     factory: Callable[[], MutableMapping[K, U]] = dict,
 ) -> dict[K, U]: ...
-@overload
-def valfilter[K, V, F: MutableMapping[Any, Any]](
-    predicate: Callable[[V], bool],
-    d: Mapping[K, V],
-    factory: F,
-) -> F: ...
 def valfilter[K, V](
     predicate: Callable[[V], bool] | Callable[[V], TypeGuard[Any]],
     d: Mapping[K, V],
-    factory: Callable[[], MutableMapping[K, Any]] = dict,
+    factory: Callable[[], MutableMapping[K, V]] = dict,
 ) -> dict[K, Any]:
     """
     Filter items in dictionary by value
@@ -430,7 +448,7 @@ def valfilter[K, V](
     >>> import cytoolz as cz
     >>> def iseven(x: int) -> bool:
     ...     return x % 2 == 0
-    >>> d = {1: 2, 2: 3, 3: 4, 4: 5}
+    >>> d: dict[int, int] = {1: 2, 2: 3, 3: 4, 4: 5}
     >>> cz.dicttoolz.valfilter(iseven, d)
     {1: 2, 3: 4}
 

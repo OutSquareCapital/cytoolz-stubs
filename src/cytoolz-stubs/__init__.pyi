@@ -1,6 +1,3 @@
-import cytoolz.dicttoolz as dicttoolz
-import cytoolz.functoolz as functoolz
-import cytoolz.itertoolz as itertoolz
-import cytoolz.recipes as recipes
+from . import curried, dicttoolz, functoolz, itertoolz, recipes
 
-__all__ = ["dicttoolz", "itertoolz", "functoolz", "recipes"]
+__all__ = ["dicttoolz", "itertoolz", "functoolz", "recipes", "curried"]

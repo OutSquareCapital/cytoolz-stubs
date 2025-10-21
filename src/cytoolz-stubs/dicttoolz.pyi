@@ -117,20 +117,20 @@ def get_in[K, V, D](
     keys: Iterable[K] | K,
     coll: Iterable[V] | Mapping[K, V],
     default: V,
-    no_default: bool = ...,
+    no_default: bool | None = ...,
 ) -> V: ...
 @overload
 def get_in[K, V, D](
     keys: Iterable[K] | K,
     coll: Iterable[V] | Mapping[K, V],
     default: D = ...,
-    no_default: bool = ...,
+    no_default: bool | None = ...,
 ) -> V | D: ...
 def get_in[K, V](
     keys: Iterable[K] | K,
     coll: Iterable[V] | Mapping[K, V],
-    default: Any = ...,
-    no_default: bool = ...,
+    default: Any | None = ...,
+    no_default: bool | None = ...,
 ) -> Any:
     """
     Returns coll[i0][i1]...[iX] where [i0, i1, ..., iX]==keys.
@@ -429,18 +429,18 @@ def update_in[K, V](
 def valfilter[K, V](
     predicate: Callable[[V], bool],
     d: Mapping[K, V],
-    factory: Callable[[], MutableMapping[K, V]] = dict,
+    factory: Callable[[], dict[K, V]] = dict,
 ) -> dict[K, V]: ...
 @overload
 def valfilter[K, V, U](
     predicate: Callable[[V], TypeGuard[U]],
     d: Mapping[K, V],
-    factory: Callable[[], MutableMapping[K, U]] = dict,
+    factory: Callable[[], dict[K, U]] = dict,
 ) -> dict[K, U]: ...
 def valfilter[K, V](
     predicate: Callable[[V], bool] | Callable[[V], TypeGuard[Any]],
     d: Mapping[K, V],
-    factory: Callable[[], MutableMapping[K, V]] = dict,
+    factory: Callable[[], dict[K, V]] = dict,
 ) -> dict[K, Any]:
     """
     Filter items in dictionary by value
@@ -474,7 +474,7 @@ def valmap[K, V, V1](
 def valmap[K, V, V1](
     func: Callable[[V], V1],
     d: dict[K, V],
-    factory: Callable[[], dict[Any, Any]] = ...,
+    factory: Callable[[], dict[Any, Any]] | None = dict,
 ) -> dict[K, V1]:
     """
     Apply function to values of dictionary

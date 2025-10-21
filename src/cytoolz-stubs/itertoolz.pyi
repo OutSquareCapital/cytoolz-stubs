@@ -436,7 +436,9 @@ def mapcat[T1, T2](
     """
     ...
 
-def merge_sorted[T](*seqs: Iterable[T], key: Callable[[T], Any] = ...) -> Iterator[T]:
+def merge_sorted[T](
+    *seqs: Iterable[T], key: Callable[[T], Any] | None = ...
+) -> Iterator[T]:
     """
     Merge and sort a collection of sorted collections
 
@@ -464,7 +466,9 @@ def nth[T](n: int, seq: Iterable[T]) -> T:
     """
     ...
 
-def partition[T](n: int, seq: Iterable[T], pad: Any = ...) -> Iterator[tuple[T, ...]]:
+def partition[T](
+    n: int, seq: Iterable[T], pad: Any | None = None
+) -> Iterator[tuple[T, ...]]:
     """
     Partition sequence into tuples of length n
 
@@ -762,7 +766,7 @@ def take_nth[T](n: int, seq: Iterable[T]) -> Iterator[T]:
     ...
 
 def topk[T](
-    k: int, seq: Iterable[T], key: Callable[[T], Any] | None = ...
+    k: int, seq: Iterable[T], key: Callable[[T], Any] | None = None
 ) -> tuple[T, ...]:
     """
     Find the k largest elements of a sequence
@@ -779,7 +783,7 @@ def topk[T](
     """
     ...
 
-def unique[T](seq: Iterable[T], key: Callable[[T], Any] | None = ...) -> Iterator[T]:
+def unique[T](seq: Iterable[T], key: Callable[[T], Any] | None = None) -> Iterator[T]:
     """
     Return only unique elements of a sequence
 

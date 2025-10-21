@@ -727,7 +727,7 @@ def sliding_window[T](n: int, seq: Iterable[T]) -> Iterator[tuple[T, ...]]:
     """
     ...
 
-def tail[T](n: int, seq: Iterable[T]) -> Iterator[T]:
+def tail[T](n: int, seq: Iterable[T]) -> list[T]:
     """
     The last n elements of a sequence
 

@@ -15,7 +15,7 @@ def countby[T, K](key: Callable[[T], K], seq: Iterable[T]) -> dict[K, int]:
     >>> countby(len, ["cat", "mouse", "dog"])
     {3: 2, 5: 1}
 
-    >>> def iseven(x):
+    >>> def iseven(x: int) -> bool:
     ...     return x % 2 == 0
     >>> countby(iseven, [1, 2, 3])
     {True: 1, False: 2}
@@ -34,11 +34,13 @@ def partitionby[T](
     `s`, every time the output of `func` changes a new list is started
     and that and subsequent items are collected into that list.
 
-    >>> is_space = lambda c: c == " "
+    >>> def is_space(c: str) -> bool:
+    ...     return c == " "
     >>> list(partitionby(is_space, "I have space"))
     [('I',), (' ',), ('h', 'a', 'v', 'e'), (' ',), ('s', 'p', 'a', 'c', 'e')]
 
-    >>> is_large = lambda x: x > 10
+    >>> def is_large(n: int) -> bool:
+    ...     return n > 10
     >>> list(partitionby(is_large, [1, 2, 1, 99, 88, 33, 99, -1, 5]))
     [(1, 2, 1), (99, 88, 33, 99), (-1, 5)]
 

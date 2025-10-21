@@ -24,14 +24,15 @@ from typing import Any, overload
 def apply[**P, T](func: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> T:
     """Applies a function and returns the results
 
-    >>> def double(x):
+    >>> import cytoolz as cz
+    >>> def double(x: int) -> int:
     ...     return 2 * x
-    >>> def inc(x):
+    >>> def inc(x: int) -> int:
     ...     return x + 1
-    >>> apply(double, 5)
+    >>> cz.functoolz.apply(double, 5)
     10
 
-    >>> tuple(map(apply, [double, inc, double], [10, 500, 8000]))
+    >>> tuple(map(cz.functoolz.apply, [double, inc, double], [10, 500, 8000]))
     (20, 501, 16000)
     """
     ...
@@ -42,9 +43,10 @@ def complement[**P](func: Callable[P, bool]) -> Callable[P, bool]:
     In other words, return a function that, for inputs that normally
     yield True, yields False, and vice-versa.
 
-    >>> def iseven(n):
+    >>> import cytoolz as cz
+    >>> def iseven(n: int) -> bool:
     ...     return n % 2 == 0
-    >>> isodd = complement(iseven)
+    >>> isodd = cz.functoolz.complement(iseven)
     >>> iseven(2)
     True
     >>> isodd(2)
@@ -62,8 +64,10 @@ def compose(*funcs: Callable[..., Any]) -> Callable[..., Any]:
 
     If no arguments are provided, the identity function (f(x) = x) is returned.
 
-    >>> inc = lambda i: i + 1
-    >>> compose(str, inc)(3)
+    >>> import cytoolz as cz
+    >>> def inc(x: int) -> int:
+    ...     return x + 1
+    >>> cz.functoolz.compose(str, inc)(3)
     '4'
 
     See Also:
@@ -107,8 +111,10 @@ def compose_left(*funcs: Callable[..., Any]) -> Callable[..., Any]:
 
     If no arguments are provided, the identity function (f(x) = x) is returned.
 
-    >>> inc = lambda i: i + 1
-    >>> compose_left(inc, str)(3)
+    >>> import cytoolz as cz
+    >>> def inc(x: int) -> int:
+    ...     return x + 1
+    >>> cz.functoolz.compose_left(inc, str)(3)
     '4'
 
     See Also:
@@ -123,9 +129,10 @@ class curry:
     Enables partial application of arguments through calling a function with an
     incomplete set of arguments.
 
-    >>> def mul(x, y):
+    >>> import cytoolz as cz
+    >>> def mul(x: int, y: int) -> int:
     ...     return x * y
-    >>> mul = curry(mul)
+    >>> mul = cz.functoolz.curry(mul)
 
     >>> double = mul(2)
     >>> double(10)
@@ -133,8 +140,8 @@ class curry:
 
     Also supports keyword arguments
 
-    >>> @curry  # Can use curry as a decorator
-    ... def f(x, y, a=10):
+    >>> @cz.functoolz.curry  # Can use curry as a decorator
+    ... def f(x: int, y: int, a: int = 10) -> int:
     ...     return a * (x + y)
 
     >>> add = f(a=1)
@@ -158,8 +165,9 @@ def do[T](func: Callable[[T], Any], x: T) -> T:
     Logging functions can be made by composing ``do`` with a storage function
     like ``list.append`` or ``file.write``
 
-    >>> from toolz import compose
-    >>> from toolz.curried import do
+    >>> import cytoolz as cz
+    >>> from cytoolz.functoolz import compose
+    >>> from cytoolz.curried import do
 
     >>> log = []
     >>> inc = lambda x: x + 1
@@ -182,7 +190,8 @@ class excepts(Exception):
 
     Examples
     --------
-    >>> excepting = excepts(
+    >>> import cytoolz as cz
+    >>> excepting = cz.functoolz.excepts(
     ...     ValueError,
     ...     lambda a: [1, 2].index(a),
     ...     lambda _: -1,
@@ -194,7 +203,7 @@ class excepts(Exception):
 
     Multiple exceptions and default except clause.
 
-    >>> excepting = excepts((IndexError, KeyError), lambda a: a[0])
+    >>> excepting = cz.functoolz.excepts((IndexError, KeyError), lambda a: a[0])
     >>> excepting([])
     >>> excepting([1])
     1
@@ -214,11 +223,12 @@ def flip[P1, P2, T](func: Callable[[P1, P2], T], a: P2, b: P1) -> T:
 
     This function is curried.
 
-    >>> def div(a, b):
+    >>> import cytoolz as cz
+    >>> def div(a: int, b: int) -> int:
     ...     return a // b
-    >>> flip(div, 2, 6)
+    >>> cz.functoolz.flip(div, 2, 6)
     3
-    >>> div_by_two = flip(div, 2)
+    >>> div_by_two = cz.functoolz.flip(div, 2)
     >>> div_by_two(4)
     2
 
@@ -227,7 +237,7 @@ def flip[P1, P2, T](func: Callable[[P1, P2], T], a: P2, b: P1) -> T:
     isinstance, issubclass.
 
     >>> data = [1, "a", "b", 2, 1.5, object(), 3]
-    >>> only_ints = list(filter(flip(isinstance, int), data))
+    >>> only_ints = list(filter(cz.functoolz.flip(isinstance, int), data))
     >>> only_ints
     [1, 2, 3]
     """
@@ -237,7 +247,8 @@ def identity[T](x: T) -> T:
     """
     Identity function. Return x
 
-    >>> identity(3)
+    >>> import cytoolz as cz
+    >>> cz.functoolz.identity(3)
     3
     """
     ...
@@ -251,11 +262,14 @@ class juxt:
     Name comes from juxtaposition: the fact of two things being seen or placed
     close together with contrasting effect.
 
-    >>> inc = lambda x: x + 1
-    >>> double = lambda x: x * 2
-    >>> juxt(inc, double)(10)
+    >>> import cytoolz as cz
+    >>> def inc(x: int) -> int:
+    ...     return x + 1
+    >>> def double(x: int) -> int:
+    ...     return x * 2
+    >>> cz.functoolz.juxt(inc, double)(10)
     (11, 20)
-    >>> juxt([inc, double])(10)
+    >>> cz.functoolz.juxt([inc, double])(10)
     (11, 20)
     """
     def __init__(self, *funcs: Callable[..., Any]) -> None: ...
@@ -272,32 +286,27 @@ def memoize[T](
         Trades memory for speed.
         Only use on pure functions.
 
-    >>> def add(x, y):
+    >>> import cytoolz as cz
+    >>> def add(x: int, y: int) -> int:
     ...     return x + y
-    >>> add = memoize(add)
-
+    >>> add = cz.functoolz.memoize(add)
     Or use as a decorator
-
-    >>> @memoize
-    ... def add(x, y):
+    >>> @cz.functoolz.memoize
+    ... def add(x: int, y: int) -> int:
     ...     return x + y
-
     Use the ``cache`` keyword to provide a dict-like object as an initial cache
-
-    >>> @memoize(cache={(1, 2): 3})
-    ... def add(x, y):
+    >>> @cz.functoolz.memoize(cache={(1, 2): 3})
+    ... def add(x: int, y: int) -> int:
     ...     return x + y
-
     Note that the above works as a decorator because ``memoize`` is curried.
 
     It is also possible to provide a ``key(args, kwargs)`` function that
     calculates keys used for the cache, which receives an ``args`` tuple and
     ``kwargs`` dict as input, and must return a hashable value.  However,
     the default key function should be sufficient most of the time.
-
     >>> # Use key function that ignores extraneous keyword arguments
-    >>> @memoize(key=lambda args, kwargs: args)
-    ... def add(x, y, verbose=False):
+    >>> @cz.functoolz.memoize(key=lambda args, kwargs: args)
+    ... def add(x: int, y: int, verbose: bool = False) -> int:
     ...     if verbose:
     ...         print("Calculating %s + %s" % (x, y))
     ...     return x + y
@@ -339,8 +348,10 @@ def pipe(data: Any, *funcs: Callable[..., Any]) -> Any:
 
     ``$ cat data | f | g | h``
 
-    >>> double = lambda i: 2 * i
-    >>> pipe(3, double, str)
+    >>> import cytoolz as cz
+    >>> def double(i: int) -> int:
+    ...     return 2 * i
+    >>> cz.functoolz.pipe(3, double, str)
     '6'
 
     See Also:
@@ -356,21 +367,22 @@ def thread_first[T, T1](
 ) -> T1:
     """Thread value through a sequence of functions/forms
 
-    >>> def double(x):
+    >>> import cytoolz as cz
+    >>> def double(x: int) -> int:
     ...     return 2 * x
-    >>> def inc(x):
+    >>> def inc(x: int) -> int:
     ...     return x + 1
-    >>> thread_first(1, inc, double)
+    >>> cz.functoolz.thread_first(1, inc, double)
     4
 
     If the function expects more than one input you can specify those inputs
     in a tuple.  The value is used as the first input.
 
-    >>> def add(x, y):
+    >>> def add(x: int, y: int) -> int:
     ...     return x + y
-    >>> def pow(x, y):
+    >>> def pow(x: int, y: int) -> int:
     ...     return x**y
-    >>> thread_first(1, (add, 4), (pow, 2))  # pow(add(1, 4), 2)
+    >>> cz.functoolz.thread_first(1, (add, 4), (pow, 2))  # pow(add(1, 4), 2)
     25
 
     So in general
@@ -386,23 +398,25 @@ def thread_first[T, T1](
 def thread_last[T, T1](
     val: T, *forms: Callable[[T], T1] | tuple[Callable[..., T1], Any]
 ) -> T1:
-    """Thread value through a sequence of functions/forms
+    """
+    Thread value through a sequence of functions/forms
 
-    >>> def double(x):
+    >>> import cytoolz as cz
+    >>> def double(x: int) -> int:
     ...     return 2 * x
-    >>> def inc(x):
+    >>> def inc(x: int) -> int:
     ...     return x + 1
-    >>> thread_last(1, inc, double)
+    >>> cz.functoolz.thread_last(1, inc, double)
     4
 
     If the function expects more than one input you can specify those inputs
     in a tuple.  The value is used as the last input.
 
-    >>> def add(x, y):
+    >>> def add(x: int, y: int) -> int:
     ...     return x + y
-    >>> def pow(x, y):
+    >>> def pow(x: int, y: int) -> int:
     ...     return x**y
-    >>> thread_last(1, (add, 4), (pow, 2))  # pow(2, add(4, 1))
+    >>> cz.functoolz.thread_last(1, (add, 4), (pow, 2))  # pow(2, add(4, 1))
     32
 
     So in general
@@ -410,9 +424,9 @@ def thread_last[T, T1](
     expands to
         g(y, z, f(x))
 
-    >>> def iseven(x):
+    >>> def iseven(x: int) -> bool:
     ...     return x % 2 == 0
-    >>> list(thread_last([1, 2, 3], (map, inc), (filter, iseven)))
+    >>> list(cz.functoolz.thread_last([1, 2, 3], (map, inc), (filter, iseven)))
     [2, 4]
 
     See Also:

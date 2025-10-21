@@ -36,9 +36,10 @@ def assoc[K, V](d: dict[K, V], key: K, value: V) -> dict[K, V]:
 
     New dict has d[key] set to value. Does not modify the initial dictionary.
 
-    >>> assoc({"x": 1}, "x", 2)
+    >>> import cytoolz as cz
+    >>> cz.dicttoolz.assoc({"x": 1}, "x", 2)
     {'x': 2}
-    >>> assoc({"x": 1}, "y", 3)
+    >>> cz.dicttoolz.assoc({"x": 1}, "y", 3)
     {'x': 1, 'y': 3}
     """
     ...
@@ -66,12 +67,13 @@ def assoc_in[K, V](
     """
     Return a new dict with new, potentially nested, key value pair
 
+    >>> import cytoolz as cz
     >>> purchase = {
     ...     "name": "Alice",
     ...     "order": {"items": ["Apple", "Orange"], "costs": [0.50, 1.25]},
-    ...     "credit card": "5555-1234-1234-1234",
+    ...     "credit card": "5555-1234-1234",
     ... }
-    >>> assoc_in(purchase, ["order", "costs"], [0.25, 1.00])
+    >>> cz.dicttoolz.assoc_in(purchase, ["order", "costs"], [0.25, 1.00])
     {'credit card': '5555-1234-1234-1234',
     'name': 'Alice',
     'order': {'costs': [0.25, 1.00], 'items': ['Apple', 'Orange']}}
@@ -97,11 +99,12 @@ def dissoc[K, V](
     New dict has d[key] deleted for each supplied key.
     Does not modify the initial dictionary.
 
-    >>> dissoc({"x": 1, "y": 2}, "y")
+    >>> import cytoolz as cz
+    >>> cz.dicttoolz.dissoc({"x": 1, "y": 2}, "y")
     {'x': 1}
-    >>> dissoc({"x": 1, "y": 2}, "y", "x")
+    >>> cz.dicttoolz.dissoc({"x": 1, "y": 2}, "y", "x")
     {}
-    >>> dissoc({"x": 1}, "y")  # Ignores missing keys
+    >>> cz.dicttoolz.dissoc({"x": 1}, "y")  # Ignores missing keys
     {'x': 1}
     """
     ...
@@ -135,21 +138,22 @@ def get_in[K, V](
     ``get_in`` is a generalization of ``operator.getitem`` for nested data
     structures such as dictionaries and lists.
 
+    >>> import cytoolz as cz
     >>> transaction = {
     ...     "name": "Alice",
     ...     "purchase": {"items": ["Apple", "Orange"], "costs": [0.50, 1.25]},
     ...     "credit card": "5555-1234-1234-1234",
     ... }
-    >>> get_in(["purchase", "items", 0], transaction)
+    >>> cz.dicttoolz.get_in(["purchase", "items", 0], transaction)
     'Apple'
-    >>> get_in(["name"], transaction)
+    >>> cz.dicttoolz.get_in(["name"], transaction)
     'Alice'
-    >>> get_in(["purchase", "total"], transaction)
-    >>> get_in(["purchase", "items", "apple"], transaction)
-    >>> get_in(["purchase", "items", 10], transaction)
-    >>> get_in(["purchase", "total"], transaction, 0)
+    >>> cz.dicttoolz.get_in(["purchase", "total"], transaction)
+    >>> cz.dicttoolz.get_in(["purchase", "items", "apple"], transaction)
+    >>> cz.dicttoolz.get_in(["purchase", "items", 10], transaction)
+    >>> cz.dicttoolz.get_in(["purchase", "total"], transaction, 0)
     0
-    >>> get_in(["y"], {}, no_default=True)
+    >>> cz.dicttoolz.get_in(["y"], {}, no_default=True)
     Traceback (most recent call last):
         ...
     KeyError: 'y'
@@ -186,12 +190,13 @@ def itemfilter[K, V](
     """
     Filter items in dictionary by item
 
-    >>> def isvalid(item):
+    >>> import cytoolz as cz
+    >>> def isvalid(item: tuple[int, int]) -> bool:
     ...     k, v = item
     ...     return k % 2 == 0 and v < 4
 
     >>> d = {1: 2, 2: 3, 3: 4, 4: 5}
-    >>> itemfilter(isvalid, d)
+    >>> cz.dicttoolz.itemfilter(isvalid, d)
     {2: 3}
 
     See Also:
@@ -227,8 +232,9 @@ def itemmap[K, V, K1, V1](
     """
     Apply function to items of dictionary
 
+    >>> import cytoolz as cz
     >>> accountids = {"Alice": 10, "Bob": 20}
-    >>> itemmap(reversed, accountids)
+    >>> cz.dicttoolz.itemmap(reversed, accountids)
     {10: "Alice", 20: "Bob"}
 
     See Also:
@@ -263,9 +269,11 @@ def keyfilter[K, V](
     """
     Filter items in dictionary by key
 
-    >>> iseven = lambda x: x % 2 == 0
+    >>> import cytoolz as cz
+    >>> def iseven(x: int) -> bool:
+    ...     return x % 2 == 0
     >>> d = {1: 2, 2: 3, 3: 4, 4: 5}
-    >>> keyfilter(iseven, d)
+    >>> cz.dicttoolz.keyfilter(iseven, d)
     {2: 3, 4: 5}
 
     See Also:
@@ -295,8 +303,9 @@ def keymap[K, V, K1](
     """
     Apply function to keys of dictionary
 
+    >>> import cytoolz as cz
     >>> bills = {"Alice": [20, 15, 30], "Bob": [10, 35]}
-    >>> keymap(str.lower, bills)
+    >>> cz.dicttoolz.keymap(str.lower, bills)
     {'alice': [20, 15, 30], 'bob': [10, 35]}
 
     See Also:
@@ -311,12 +320,12 @@ def merge[K, V](
     """
     Merge a collection of dictionaries
 
-    >>> merge({1: "one"}, {2: "two"})
+    >>> import cytoolz as cz
+    >>> cz.dicttoolz.merge({1: "one"}, {2: "two"})
     {1: 'one', 2: 'two'}
 
     Later dictionaries have precedence
-
-    >>> merge({1: 2, 3: 4}, {3: 3, 4: 4})
+    >>> cz.dicttoolz.merge({1: 2, 3: 4}, {3: 3, 4: 4})
     {1: 2, 3: 3, 4: 4}
 
     See Also:
@@ -335,10 +344,10 @@ def merge_with[K, V](
     A key may occur in more than one dict, and all values mapped from the key
     will be passed to the function as a list, such as func([val1, val2, ...]).
 
-    >>> merge_with(sum, {1: 1, 2: 2}, {1: 10, 2: 20})
+    >>> import cytoolz as cz
+    >>> cz.dicttoolz.merge_with(sum, {1: 1, 2: 2}, {1: 10, 2: 20})
     {1: 11, 2: 22}
-
-    >>> merge_with(first, {1: 1, 2: 2}, {2: 20, 3: 30})
+    >>> cz.dicttoolz.merge_with(cz.itertoolz.first, {1: 1, 2: 2}, {2: 20, 3: 30})
     {1: 1, 2: 2, 3: 30}
 
     See Also:
@@ -368,8 +377,9 @@ def update_in[T: Mapping[Any, Any]](
     If k0 is not a key in d, update_in creates nested dictionaries to the depth
     specified by the keys, with the innermost value set to func(default).
 
+    >>> import cytoolz as cz
     >>> inc = lambda x: x + 1
-    >>> update_in({"a": 0}, ["a"], inc)
+    >>> cz.dicttoolz.update_in({"a": 0}, ["a"], inc)
     {'a': 1}
 
     >>> transaction = {
@@ -377,15 +387,16 @@ def update_in[T: Mapping[Any, Any]](
     ...     "purchase": {"items": ["Apple", "Orange"], "costs": [0.50, 1.25]},
     ...     "credit card": "5555-1234-1234-1234",
     ... }
-    >>> update_in(transaction, ["purchase", "costs"], sum)
+    >>> cz.dicttoolz.update_in(transaction, ["purchase", "costs"], sum)
     {'credit card': '5555-1234-1234-1234',
     'name': 'Alice',
     'purchase': {'costs': 1.75, 'items': ['Apple', 'Orange']}}
 
     >>> # updating a value when k0 is not in d
-    >>> update_in({}, [1, 2, 3], str, default="bar")
+    >>> cz.dicttoolz.update_in({}, [1, 2, 3], str, default="bar")
     {1: {2: {3: 'bar'}}}
-    >>> update_in({1: "foo"}, [2, 3, 4], inc, 0)
+    >>> import cytoolz as cz
+    >>> cz.dicttoolz.update_in({1: "foo"}, [2, 3, 4], inc, 0)
     {1: 'foo', 2: {3: {4: 1}}}
     """
     ...
@@ -416,9 +427,11 @@ def valfilter[K, V](
     """
     Filter items in dictionary by value
 
-    >>> iseven = lambda x: x % 2 == 0
+    >>> import cytoolz as cz
+    >>> def iseven(x: int) -> bool:
+    ...     return x % 2 == 0
     >>> d = {1: 2, 2: 3, 3: 4, 4: 5}
-    >>> valfilter(iseven, d)
+    >>> cz.dicttoolz.valfilter(iseven, d)
     {1: 2, 3: 4}
 
     See Also:
@@ -448,8 +461,9 @@ def valmap[K, V, V1](
     """
     Apply function to values of dictionary
 
+    >>> import cytoolz as cz
     >>> bills = {"Alice": [20, 15, 30], "Bob": [10, 35]}
-    >>> valmap(sum, bills)
+    >>> cz.dicttoolz.valmap(sum, bills)
     {'Alice': 65, 'Bob': 45}
 
     See Also:

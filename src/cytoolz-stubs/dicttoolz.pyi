@@ -18,7 +18,7 @@ dicttoolz
 """
 
 from collections.abc import Callable, Iterable, Mapping, MutableMapping, Sequence
-from typing import Any, overload
+from typing import Any, TypeGuard, overload
 
 @overload
 def assoc[K, V, F: MutableMapping[Any, Any]](
@@ -389,11 +389,23 @@ def update_in[K, V](
     """
     ...
 
+@overload
+def valfilter[K, V, R](
+    predicate: Callable[[V], TypeGuard[R]],
+    d: Mapping[K, V],
+    factory: Callable[[], dict[K, R]] = dict,
+) -> dict[K, R]: ...
+@overload
 def valfilter[K, V](
     predicate: Callable[[V], bool],
     d: Mapping[K, V],
     factory: Callable[[], dict[K, V]] = dict,
-) -> dict[K, V]:
+) -> dict[K, V]: ...
+def valfilter(
+    predicate: Callable[[Any], bool],
+    d: Mapping[Any, Any],
+    factory: Callable[[], dict[Any, Any]] = dict,
+) -> dict[Any, Any]:
     """
     Filter items in dictionary by value
 

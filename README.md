@@ -7,6 +7,7 @@ install with:
 
 ```bash
 uv add git+https://github.com/OutSquareCapital/cytoolz-stubs.git
+```
 
 ## Testing
 

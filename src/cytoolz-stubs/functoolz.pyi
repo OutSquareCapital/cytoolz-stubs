@@ -21,7 +21,7 @@ functoolz
 from collections.abc import Callable, MutableMapping
 from typing import Any, overload
 
-def apply[**P, T](func: Callable[..., T], *args: Any, **kwargs: Any) -> T:
+def apply[T](func: Callable[..., T], *args: Any, **kwargs: Any) -> T:
     """
     Applies a function and returns the results
 

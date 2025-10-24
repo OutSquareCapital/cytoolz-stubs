@@ -486,9 +486,13 @@ def partition[T](
 def partition[T](
     n: Literal[5], seq: Iterable[T], pad: None = None
 ) -> Iterator[tuple[T, T, T, T, T]]: ...
+@overload
 def partition[T](
     n: int, seq: Iterable[T], pad: Any | None = None
-) -> Iterator[tuple[T, ...]]:
+) -> Iterator[tuple[T, ...]]: ...
+def partition(
+    n: int, seq: Iterable[Any], pad: Any | None = None
+) -> Iterator[tuple[Any, ...]]:
     """
     Partition sequence into tuples of length n
 
@@ -746,7 +750,9 @@ def sliding_window[T](
 def sliding_window[T](
     n: Literal[5], seq: Iterable[T]
 ) -> Iterator[tuple[T, T, T, T, T]]: ...
-def sliding_window[T](n: int, seq: Iterable[T]) -> Iterator[tuple[T, ...]]:
+@overload
+def sliding_window[T](n: int, seq: Iterable[T]) -> Iterator[tuple[T, ...]]: ...
+def sliding_window(n: int, seq: Iterable[Any]) -> Iterator[tuple[Any, ...]]:
     """
     A sequence of overlapping subsequences
 
@@ -823,9 +829,13 @@ def topk[T](
 def topk[T](
     k: Literal[5], seq: Iterable[T], key: Callable[[T], Any] | None = ...
 ) -> tuple[T, T, T, T, T]: ...
+@overload
 def topk[T](
     k: int, seq: Iterable[T], key: Callable[[T], Any] | None = None
-) -> tuple[T, ...]:
+) -> tuple[T, ...]: ...
+def topk(
+    k: int, seq: Iterable[Any], key: Callable[[Any], Any] | None = None
+) -> tuple[Any, ...]:
     """
     Find the k largest elements of a sequence
 

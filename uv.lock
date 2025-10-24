@@ -121,18 +121,27 @@ wheels = [
 
 [[package]]
 name = "cytoolz-stubs"
-version = "0.2.2"
+version = "0.3.0"
 source = { editable = "." }
 
 [package.dev-dependencies]
 dev = [
     { name = "cytoolz" },
+    { name = "doctester" },
 ]
 
 [package.metadata]
 
 [package.metadata.requires-dev]
-dev = [{ name = "cytoolz", specifier = ">=1.1.0" }]
+dev = [
+    { name = "cytoolz", specifier = ">=1.1.0" },
+    { name = "doctester", git = "https://github.com/OutSquareCapital/doctester.git" },
+]
+
+[[package]]
+name = "doctester"
+version = "0.1.1"
+source = { git = "https://github.com/OutSquareCapital/doctester.git#a0845bcf168af77a07602e0d064e28ee19814cac" }
 
 [[package]]
 name = "toolz"

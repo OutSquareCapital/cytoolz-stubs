@@ -1,5 +1,5 @@
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
-from typing import Any, overload
+from typing import Any, Literal, TypeGuard, overload
 
 def accumulate[T](
     binop: Callable[[T, T], T], seq: Iterable[T], initial: Any = ...
@@ -283,7 +283,7 @@ def isdistinct(seq: Iterable[Any]) -> bool:
     """
     ...
 
-def isiterable(x: Any) -> bool:
+def isiterable(x: Any) -> TypeGuard[Iterable[Any]]:
     """
     Is x iterable?
 
@@ -466,6 +466,26 @@ def nth[T](n: int, seq: Iterable[T]) -> T:
     """
     ...
 
+@overload
+def partition[T](
+    n: Literal[1], seq: Iterable[T], pad: None = None
+) -> Iterator[tuple[T]]: ...
+@overload
+def partition[T](
+    n: Literal[2], seq: Iterable[T], pad: None = None
+) -> Iterator[tuple[T, T]]: ...
+@overload
+def partition[T](
+    n: Literal[3], seq: Iterable[T], pad: None = None
+) -> Iterator[tuple[T, T, T]]: ...
+@overload
+def partition[T](
+    n: Literal[4], seq: Iterable[T], pad: None = None
+) -> Iterator[tuple[T, T, T, T]]: ...
+@overload
+def partition[T](
+    n: Literal[5], seq: Iterable[T], pad: None = None
+) -> Iterator[tuple[T, T, T, T, T]]: ...
 def partition[T](
     n: int, seq: Iterable[T], pad: Any | None = None
 ) -> Iterator[tuple[T, ...]]:
@@ -540,7 +560,11 @@ def peekn[T](n: int, seq: Iterable[T]) -> tuple[tuple[T, ...], Iterator[T]]:
     """
     ...
 
-def pluck(ind: Any, seqs: Iterable[Any], default: Any = ...) -> Iterator[Any]:
+def pluck(
+    ind: str | int | list[str] | list[int],
+    seqs: Iterable[Sequence[Any] | Mapping[str, Any] | Mapping[int, Any]],
+    default: Any = ...,
+) -> Iterator[Any]:
     """
     plucks an element or several elements from each item in a sequence.
 
@@ -708,6 +732,20 @@ def second[T](seq: Iterable[T]) -> T:
     """
     ...
 
+@overload
+def sliding_window[T](n: Literal[1], seq: Iterable[T]) -> Iterator[tuple[T]]: ...
+@overload
+def sliding_window[T](n: Literal[2], seq: Iterable[T]) -> Iterator[tuple[T, T]]: ...
+@overload
+def sliding_window[T](n: Literal[3], seq: Iterable[T]) -> Iterator[tuple[T, T, T]]: ...
+@overload
+def sliding_window[T](
+    n: Literal[4], seq: Iterable[T]
+) -> Iterator[tuple[T, T, T, T]]: ...
+@overload
+def sliding_window[T](
+    n: Literal[5], seq: Iterable[T]
+) -> Iterator[tuple[T, T, T, T, T]]: ...
 def sliding_window[T](n: int, seq: Iterable[T]) -> Iterator[tuple[T, ...]]:
     """
     A sequence of overlapping subsequences
@@ -765,6 +803,26 @@ def take_nth[T](n: int, seq: Iterable[T]) -> Iterator[T]:
     """
     ...
 
+@overload
+def topk[T](
+    k: Literal[1], seq: Iterable[T], key: Callable[[T], Any] | None = ...
+) -> tuple[T]: ...
+@overload
+def topk[T](
+    k: Literal[2], seq: Iterable[T], key: Callable[[T], Any] | None = ...
+) -> tuple[T, T]: ...
+@overload
+def topk[T](
+    k: Literal[3], seq: Iterable[T], key: Callable[[T], Any] | None = ...
+) -> tuple[T, T, T]: ...
+@overload
+def topk[T](
+    k: Literal[4], seq: Iterable[T], key: Callable[[T], Any] | None = ...
+) -> tuple[T, T, T, T]: ...
+@overload
+def topk[T](
+    k: Literal[5], seq: Iterable[T], key: Callable[[T], Any] | None = ...
+) -> tuple[T, T, T, T, T]: ...
 def topk[T](
     k: int, seq: Iterable[T], key: Callable[[T], Any] | None = None
 ) -> tuple[T, ...]:
@@ -777,6 +835,8 @@ def topk[T](
     (1000, 100)
     >>> cz.itertoolz.topk(2, ["Alice", "Bob", "Charlie", "Dan"], key=len)
     ('Charlie', 'Alice')
+    >>> cz.itertoolz.topk(3, [5, 1, 5, 3, 7, 9, 7, 5])
+    (9, 7, 7)
 
     See also:
         heapq.nlargest

@@ -6,8 +6,7 @@ stubs for cytoolz
 install with:
 
 ```bash
-uv add git+https://github.com/py-stubs/cytoolz-stubs.git
-```
+uv add git+https://github.com/OutSquareCapital/cytoolz-stubs.git
 
 ## Testing
 

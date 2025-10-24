@@ -11,10 +11,7 @@ requires      = ["uv_build>=0.8.15,<0.9.0"]
 
 
 [dependency-groups]
-dev = [
-    "cytoolz>=1.1.0",
-    "doctester",
-]
+dev = ["cytoolz>=1.1.0", "doctester"]
 
 [tool.uv.sources]
 doctester = { git = "https://github.com/OutSquareCapital/doctester.git" }

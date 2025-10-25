@@ -1,5 +1,5 @@
-from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
-from typing import Any, Literal, TypeGuard, overload
+from collections.abc import Callable, Collection, Iterable, Iterator, Mapping, Sequence
+from typing import Any, Literal, TypeIs, overload
 
 def accumulate[T](
     binop: Callable[[T, T], T], seq: Iterable[T], initial: Any = ...
@@ -283,7 +283,13 @@ def isdistinct(seq: Iterable[Any]) -> bool:
     """
     ...
 
-def isiterable(x: Any) -> TypeGuard[Iterable[Any]]:
+@overload
+def isiterable(x: Any | Collection[Any]) -> TypeIs[Collection[Any]]: ...
+@overload
+def isiterable(x: Any | Iterator[Any]) -> TypeIs[Iterator[Any]]: ...
+@overload
+def isiterable(x: Any | Iterable[Any]) -> TypeIs[Iterable[Any]]: ...
+def isiterable(x: Any) -> TypeIs[Iterable[Any]]:
     """
     Is x iterable?
 

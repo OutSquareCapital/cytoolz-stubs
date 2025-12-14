@@ -1,4 +1,11 @@
-from collections.abc import Callable, Collection, Iterable, Iterator, Mapping, Sequence
+from collections.abc import (
+    Callable,
+    Collection,
+    Iterable,
+    Iterator,
+    Mapping,
+    Sequence,
+)
 from typing import Any, Literal, TypeIs, overload
 
 def accumulate[T](
@@ -253,7 +260,7 @@ def interpose[T, E](el: E, seq: Iterable[T]) -> Iterator[T | E]:
     [1, 'a', 2, 'a', 3]
     """
 
-def isdistinct(seq: Iterable[Any]) -> bool:
+def isdistinct(seq: Collection[Any]) -> bool:
     """All values in sequence are distinct
 
     >>> import cytoolz as cz

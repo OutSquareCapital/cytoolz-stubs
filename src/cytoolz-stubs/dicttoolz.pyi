@@ -1,5 +1,4 @@
-"""
-dicttoolz
+"""dicttoolz
 ========
 
 - assoc : Return a new dict with new key value pair
@@ -31,8 +30,7 @@ def assoc[K, V, F: MutableMapping[Any, Any]](
 @overload
 def assoc[K, V](d: Mapping[K, V], key: K, value: V) -> dict[K, V]: ...
 def assoc[K, V](d: dict[K, V], key: K, value: V) -> dict[K, V]:
-    """
-    Return a new dict with new key value pair
+    """Return a new dict with new key value pair
 
     New dict has d[key] set to value. Does not modify the initial dictionary.
 
@@ -42,7 +40,6 @@ def assoc[K, V](d: dict[K, V], key: K, value: V) -> dict[K, V]:
     >>> cz.dicttoolz.assoc({"x": 1}, "y", 3)
     {'x': 1, 'y': 3}
     """
-    ...
 
 @overload
 def assoc_in[F: MutableMapping[Any, Any]](
@@ -62,10 +59,9 @@ def assoc_in[K, V](
     d: dict[K, V],
     keys: Iterable[K] | K,
     value: V,
-    factory: Callable[[], dict[K, V]] = dict,
+    factory: Callable[[], dict[K, V]] = ...,
 ) -> dict[K, V]:
-    """
-    Return a new dict with new, potentially nested, key value pair
+    """Return a new dict with new, potentially nested, key value pair
 
     >>> import cytoolz as cz
     >>> purchase = {
@@ -81,7 +77,6 @@ def assoc_in[K, V](
     }
 
     """
-    ...
 
 @overload
 def dissoc[K, V, F: MutableMapping[Any, Any]](
@@ -91,13 +86,16 @@ def dissoc[K, V, F: MutableMapping[Any, Any]](
 ) -> F: ...
 @overload
 def dissoc[K, V](
-    d: Mapping[K, V], *keys: K, factory: Callable[[], dict[K, V]] = dict
+    d: Mapping[K, V],
+    *keys: K,
+    factory: Callable[[], dict[K, V]] = ...,
 ) -> dict[K, V]: ...
 def dissoc[K, V](
-    d: dict[K, V], *keys: K, factory: Callable[[], dict[K, V]] = dict
+    d: dict[K, V],
+    *keys: K,
+    factory: Callable[[], dict[K, V]] = ...,
 ) -> dict[K, V]:
-    """
-    Return a new dict with the given key(s) removed.
+    """Return a new dict with the given key(s) removed.
 
     New dict has d[key] deleted for each supplied key.
     Does not modify the initial dictionary.
@@ -110,7 +108,6 @@ def dissoc[K, V](
     >>> cz.dicttoolz.dissoc({"x": 1}, "y")  # Ignores missing keys
     {'x': 1}
     """
-    ...
 
 @overload
 def get_in[K, V, D](
@@ -132,8 +129,7 @@ def get_in[K, V](
     default: Any | None = ...,
     no_default: bool | None = ...,
 ) -> Any:
-    """
-    Returns coll[i0][i1]...[iX] where [i0, i1, ..., iX]==keys.
+    """Returns coll[i0][i1]...[iX] where [i0, i1, ..., iX]==keys.
 
     If coll[i0][i1]...[iX] cannot be found, returns ``default``, unless
     ``no_default`` is specified, then it raises KeyError or IndexError.
@@ -160,16 +156,15 @@ def get_in[K, V](
     See Also:
         itertoolz.get
         operator.getitem
+
     """
-    ...
 
 def itemfilter[K, V](
     predicate: Callable[[tuple[K, V]], bool],
     d: Mapping[K, V],
-    factory: Callable[[], dict[K, V]] = dict,
+    factory: Callable[[], dict[K, V]] = ...,
 ) -> dict[K, V]:
-    """
-    Filter items in dictionary by item
+    """Filter items in dictionary by item
 
     >>> import cytoolz as cz
     >>> def isvalid(item: tuple[int, int]) -> bool:
@@ -183,8 +178,8 @@ def itemfilter[K, V](
         keyfilter
         valfilter
         itemmap
+
     """
-    ...
 
 @overload
 def itemmap[K, V, K1, V1, F: MutableMapping[Any, Any]](
@@ -209,8 +204,7 @@ def itemmap[K, V, K1, V1](
     func: Callable[[tuple[K, V]], tuple[K1, V1]] | type[reversed[Any]],
     d: dict[K, V],
 ) -> dict[K1, V1] | dict[V, K]:
-    """
-    Apply function to items of dictionary
+    """Apply function to items of dictionary
 
     >>> import cytoolz as cz
     >>> accountids = {"Alice": 10, "Bob": 20}
@@ -220,28 +214,27 @@ def itemmap[K, V, K1, V1](
     See Also:
         keymap
         valmap
+
     """
-    ...
 
 @overload
 def keyfilter[K, V, U](
     predicate: Callable[[K], TypeIs[U]],
     d: Mapping[K, V],
-    factory: Callable[[], dict[K, V]] = dict,
+    factory: Callable[[], dict[K, V]] = ...,
 ) -> dict[U, V]: ...
 @overload
 def keyfilter[K, V](
     predicate: Callable[[K], bool],
     d: Mapping[K, V],
-    factory: Callable[[], dict[K, V]] = dict,
+    factory: Callable[[], dict[K, V]] = ...,
 ) -> dict[K, V]: ...
 def keyfilter[K, V, U](
     predicate: Callable[[K], bool] | Callable[[K], TypeIs[U]],
     d: Mapping[K, V],
-    factory: Callable[[], dict[K, V]] = dict,
+    factory: Callable[[], dict[K, V]] = ...,
 ) -> dict[K, V] | dict[U, V]:
-    """
-    Filter items in dictionary by key
+    """Filter items in dictionary by key
 
     >>> import cytoolz as cz
     >>> def iseven(x: int) -> bool:
@@ -254,15 +247,15 @@ def keyfilter[K, V, U](
         valfilter
         itemfilter
         keymap
+
     """
-    ...
 
 @overload
 def keymap[K, K1, V](
     keyfunc: Callable[[K], K1],
     d: Mapping[K, V],
     *,
-    factory: Callable[[], MutableMapping[K1, V]] = dict,
+    factory: Callable[[], MutableMapping[K1, V]] = ...,
 ) -> MutableMapping[K1, V]: ...
 @overload
 def keymap[K, K1, V](
@@ -272,10 +265,9 @@ def keymap[K, K1, V](
 def keymap[K, V, K1](
     func: Callable[[K], K1],
     d: dict[K, V],
-    factory: Callable[[], dict[K1, V]] = dict,
+    factory: Callable[[], dict[K1, V]] = ...,
 ) -> dict[K1, V]:
-    """
-    Apply function to keys of dictionary
+    """Apply function to keys of dictionary
 
     >>> import cytoolz as cz
     >>> bills = {"Alice": [20, 15, 30], "Bob": [10, 35]}
@@ -285,14 +277,14 @@ def keymap[K, V, K1](
     See Also:
         valmap
         itemmap
+
     """
-    ...
 
 def merge[K, V](
-    *dicts: Mapping[K, V], factory: Callable[[], dict[K, V]] = dict
+    *dicts: Mapping[K, V],
+    factory: Callable[[], dict[K, V]] = ...,
 ) -> dict[K, V]:
-    """
-    Merge a collection of dictionaries
+    """Merge a collection of dictionaries
 
     >>> import cytoolz as cz
     >>> cz.dicttoolz.merge({1: "one"}, {2: "two"})
@@ -304,16 +296,15 @@ def merge[K, V](
 
     See Also:
         merge_with
+
     """
-    ...
 
 def merge_with[K, V](
     func: Callable[[list[V]], V],
     *dicts: Mapping[K, V],
-    factory: Callable[[], dict[K, V]] = dict,
+    factory: Callable[[], dict[K, V]] = ...,
 ) -> dict[K, V]:
-    """
-    Merge dictionaries and apply function to combined values
+    """Merge dictionaries and apply function to combined values
 
     A key may occur in more than one dict, and all values mapped from the key
     will be passed to the function as a list, such as func([val1, val2, ...]).
@@ -326,8 +317,8 @@ def merge_with[K, V](
 
     See Also:
         merge
+
     """
-    ...
 
 @overload
 def update_in[T: Mapping[Any, Any]](
@@ -343,7 +334,7 @@ def update_in[K, V](
     keys: Sequence[Any],
     func: Callable[[Any], Any],
     default: Any | None,
-    factory: Callable[[], dict[K, V]] = dict,
+    factory: Callable[[], dict[K, V]] = ...,
 ) -> dict[K, V]: ...
 @overload
 def update_in[K, V, U](
@@ -351,7 +342,7 @@ def update_in[K, V, U](
     keys: Sequence[Any],
     func: Callable[[Any], Any],
     default: Any | None,
-    factory: Callable[[], dict[K, U]] = dict,
+    factory: Callable[[], dict[K, U]] = ...,
 ) -> dict[K, U]: ...
 @overload
 def update_in[K, V](
@@ -359,10 +350,9 @@ def update_in[K, V](
     keys: Sequence[Any],
     func: Callable[[Any], Any],
     default: Any | None = None,
-    factory: Callable[[], dict[K, V]] = dict,
+    factory: Callable[[], dict[K, V]] = ...,
 ) -> dict[K, V]:
-    """
-    Update value in a (potentially) nested dictionary
+    """Update value in a (potentially) nested dictionary
 
     inputs:
     d - dictionary on which to operate
@@ -399,27 +389,25 @@ def update_in[K, V](
     >>> cz.dicttoolz.update_in({1: "foo"}, [2, 3, 4], inc, 0)
     {1: 'foo', 2: {3: {4: 1}}}
     """
-    ...
 
 @overload
 def valfilter[K, V, R](
     predicate: Callable[[V], TypeIs[R]],
     d: Mapping[K, V],
-    factory: Callable[[], dict[K, R]] = dict,
+    factory: Callable[[], dict[K, R]] = ...,
 ) -> dict[K, R]: ...
 @overload
 def valfilter[K, V](
     predicate: Callable[[V], bool],
     d: Mapping[K, V],
-    factory: Callable[[], dict[K, V]] = dict,
+    factory: Callable[[], dict[K, V]] = ...,
 ) -> dict[K, V]: ...
 def valfilter(
     predicate: Callable[[Any], bool],
     d: Mapping[Any, Any],
-    factory: Callable[[], dict[Any, Any]] = dict,
+    factory: Callable[[], dict[Any, Any]] = ...,
 ) -> dict[Any, Any]:
-    """
-    Filter items in dictionary by value
+    """Filter items in dictionary by value
 
     >>> import cytoolz as cz
     >>> def iseven(x: int) -> bool:
@@ -432,8 +420,8 @@ def valfilter(
         keyfilter
         itemfilter
         valmap
+
     """
-    ...
 
 @overload
 def valmap[K, V, V1](
@@ -450,10 +438,9 @@ def valmap[K, V, V1](
 def valmap[K, V, V1](
     func: Callable[[V], V1],
     d: dict[K, V],
-    factory: Callable[[], dict[Any, Any]] | None = dict,
+    factory: Callable[[], dict[Any, Any]] | None = ...,
 ) -> dict[K, V1]:
-    """
-    Apply function to values of dictionary
+    """Apply function to values of dictionary
 
     >>> import cytoolz as cz
     >>> bills = {"Alice": [20, 15, 30], "Bob": [10, 35]}
@@ -463,5 +450,5 @@ def valmap[K, V, V1](
     See Also:
         keymap
         itemmap
+
     """
-    ...

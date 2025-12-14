@@ -1,5 +1,4 @@
-"""
-functoolz
+"""functoolz
 ========
 
 - apply : Applies a function and returns the results
@@ -22,8 +21,7 @@ from collections.abc import Callable, MutableMapping
 from typing import Any, overload
 
 def apply[T](func: Callable[..., T], *args: Any, **kwargs: Any) -> T:
-    """
-    Applies a function and returns the results
+    """Applies a function and returns the results
 
     >>> import cytoolz as cz
     >>> def double(x: int) -> int:
@@ -36,7 +34,6 @@ def apply[T](func: Callable[..., T], *args: Any, **kwargs: Any) -> T:
     >>> tuple(map(cz.functoolz.apply, [double, inc, double], [10, 500, 8000]))
     (20, 501, 16000)
     """
-    ...
 
 def complement[**P](func: Callable[P, bool]) -> Callable[P, bool]:
     """Convert a predicate function to its logical complement.
@@ -53,7 +50,6 @@ def complement[**P](func: Callable[P, bool]) -> Callable[P, bool]:
     >>> isodd(2)
     False
     """
-    ...
 
 def compose(*funcs: Callable[..., Any]) -> Callable[..., Any]:
     """Compose functions to operate in series.
@@ -74,18 +70,21 @@ def compose(*funcs: Callable[..., Any]) -> Callable[..., Any]:
     See Also:
         compose_left
         pipe
+
     """
-    ...
 
 @overload
 def compose_left[**P, T](fn_1: Callable[P, T]) -> Callable[P, T]: ...
 @overload
 def compose_left[**P, T, T1](
-    fn_1: Callable[P, T], fn_2: Callable[[T], T1]
+    fn_1: Callable[P, T],
+    fn_2: Callable[[T], T1],
 ) -> Callable[P, T1]: ...
 @overload
 def compose_left[**P, T, T1, T2](
-    fn_1: Callable[P, T], fn_2: Callable[[T], T1], fn_3: Callable[[T1], T2]
+    fn_1: Callable[P, T],
+    fn_2: Callable[[T], T1],
+    fn_3: Callable[[T1], T2],
 ) -> Callable[P, T2]: ...
 @overload
 def compose_left[**P, T, T1, T2, T3](
@@ -121,8 +120,8 @@ def compose_left(*funcs: Callable[..., Any]) -> Callable[..., Any]:
     See Also:
         compose
         pipe
+
     """
-    ...
 
 class curry:
     """Curry a callable function
@@ -152,13 +151,14 @@ class curry:
     See Also:
         toolz.curried - namespace of curried functions
                         https://toolz.readthedocs.io/en/latest/curry.html
+
     """
+
     def __init__(self, *args: Any, **kwargs: Any) -> None: ...
     def __call__(self, *args: Any, **kwargs: Any) -> Any: ...
 
 def do[T](func: Callable[[T], Any], x: T) -> T:
-    """
-    Runs ``func`` on ``x``, returns ``x``
+    """Runs ``func`` on ``x``, returns ``x``
 
     Because the results of ``func`` are not returned, only the side
     effects of ``func`` are relevant.
@@ -179,7 +179,6 @@ def do[T](func: Callable[[T], Any], x: T) -> T:
     >>> log
     [1, 11]
     """
-    ...
 
 class excepts(Exception):
     """A wrapper around a function to catch exceptions and
@@ -213,7 +212,9 @@ class excepts(Exception):
     excepting({0: 1})
     # 1
     ```
+
     """
+
     def __init__(
         self,
         exc: type | tuple[type, ...],
@@ -222,8 +223,7 @@ class excepts(Exception):
     ) -> None: ...
 
 def flip[T](func: Callable[[Any, Any], T], a: Any, b: Any) -> T:
-    """
-    Call the function call with the arguments flipped
+    """Call the function call with the arguments flipped
 
     This function is curried.
 
@@ -244,17 +244,14 @@ def flip[T](func: Callable[[Any, Any], T], a: Any, b: Any) -> T:
     >>> only_ints
     [1, 2, 3]
     """
-    ...
 
 def identity[T](x: T) -> T:
-    """
-    Identity function. Return x
+    """Identity function. Return x
 
     >>> import cytoolz as cz
     >>> cz.functoolz.identity(3)
     3
     """
-    ...
 
 class juxt:
     """Creates a function that calls several functions with the same arguments
@@ -275,6 +272,7 @@ class juxt:
     >>> cz.functoolz.juxt([inc, double])(10)
     (11, 20)
     """
+
     def __init__(self, *funcs: Callable[..., Any]) -> None: ...
     def __call__(self, *args: Any, **kwargs: Any) -> tuple[Any, ...]: ...
 
@@ -318,7 +316,6 @@ def memoize[T](
     ...         print("Calculating %s + %s" % (x, y))
     ...     return x + y
     """
-    ...
 
 @overload
 def pipe[**P, T](data: T, fn1: Callable[P, T]) -> T: ...
@@ -326,7 +323,10 @@ def pipe[**P, T](data: T, fn1: Callable[P, T]) -> T: ...
 def pipe[**P, T, T1](data: T, fn1: Callable[P, T], fn2: Callable[[T], T1]) -> T1: ...
 @overload
 def pipe[**P, T, T1, T2](
-    data: T, fn1: Callable[P, T], fn2: Callable[[T], T1], fn3: Callable[[T1], T2]
+    data: T,
+    fn1: Callable[P, T],
+    fn2: Callable[[T], T1],
+    fn3: Callable[[T1], T2],
 ) -> T2: ...
 @overload
 def pipe[**P, T, T1, T2, T3](
@@ -366,11 +366,12 @@ def pipe(data: Any, *funcs: Callable[..., Any]) -> Any:
         compose_left
         thread_first
         thread_last
+
     """
-    ...
 
 def thread_first[T, T1](
-    val: T, *forms: Callable[[T], T1] | tuple[Callable[..., T1], Any]
+    val: T,
+    *forms: Callable[[T], T1] | tuple[Callable[..., T1], Any],
 ) -> T1:
     """Thread value through a sequence of functions/forms
 
@@ -399,14 +400,14 @@ def thread_first[T, T1](
 
     See Also:
         thread_last
+
     """
-    ...
 
 def thread_last[T, T1](
-    val: T, *forms: Callable[[T], T1] | tuple[Callable[..., T1], Any]
+    val: T,
+    *forms: Callable[[T], T1] | tuple[Callable[..., T1], Any],
 ) -> T1:
-    """
-    Thread value through a sequence of functions/forms
+    """Thread value through a sequence of functions/forms
 
     >>> import cytoolz as cz
     >>> def double(x: int) -> int:
@@ -438,5 +439,5 @@ def thread_last[T, T1](
 
     See Also:
         thread_first
+
     """
-    ...

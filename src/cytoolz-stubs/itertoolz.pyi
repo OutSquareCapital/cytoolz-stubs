@@ -209,6 +209,10 @@ def get(ind: Iterable[int], seq: Sequence[Any], default: Any = ...) -> Iterator[
 
     """
 
+@overload
+def groupby[T, K](key: Callable[[T], K], seq: Iterable[T]) -> dict[K, list[T]]: ...
+@overload
+def groupby[T, K](key: K, seq: Iterable[T]) -> dict[K, list[T]]: ...
 def groupby[T, K](key: Callable[[T], K] | K, seq: Iterable[T]) -> dict[K, list[T]]:
     """Group a collection by a key function.
 

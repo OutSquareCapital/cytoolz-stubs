@@ -1,4 +1,5 @@
-"""functoolz
+"""functoolz.
+
 ========
 
 - apply : Applies a function and returns the results
@@ -20,8 +21,8 @@
 from collections.abc import Callable, MutableMapping
 from typing import Any, overload
 
-def apply[T](func: Callable[..., T], *args: Any, **kwargs: Any) -> T:
-    """Applies a function and returns the results
+def apply[T](func: Callable[..., T], *args: object, **kwargs: object) -> T:
+    """Applies a function and returns the results.
 
     >>> import cytoolz as cz
     >>> def double(x: int) -> int:
@@ -123,8 +124,8 @@ def compose_left(*funcs: Callable[..., Any]) -> Callable[..., Any]:
 
     """
 
-class curry:
-    """Curry a callable function
+class curry:  # noqa: N801
+    """Curry a callable function.
 
     Enables partial application of arguments through calling a function with an
     incomplete set of arguments.
@@ -154,11 +155,11 @@ class curry:
 
     """
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None: ...
-    def __call__(self, *args: Any, **kwargs: Any) -> Any: ...
+    def __init__(self, *args: object, **kwargs: object) -> None: ...
+    def __call__(self, *args: object, **kwargs: object) -> object: ...
 
 def do[T](func: Callable[[T], Any], x: T) -> T:
-    """Runs ``func`` on ``x``, returns ``x``
+    """Runs ``func`` on ``x``, returns ``x``.
 
     Because the results of ``func`` are not returned, only the side
     effects of ``func`` are relevant.
@@ -180,17 +181,17 @@ def do[T](func: Callable[[T], Any], x: T) -> T:
     [1, 11]
     """
 
-class excepts(Exception):
-    """A wrapper around a function to catch exceptions and
-    dispatch to a handler.
+class excepts(Exception):  # noqa: N801, N818
+    """A wrapper around a function to catch exceptions and dispatch to a handler.
 
     This is like a functional try/except block, in the same way that
     ifexprs are functional if/else blocks.
 
-    Examples
+    Examples:
     --------
     ```python
     import cytoolz as cz
+
     excepting = cz.functoolz.excepts(
         ValueError,
         lambda a: [1, 2].index(a),
@@ -222,8 +223,8 @@ class excepts(Exception):
         handler: Callable[[Exception], Any] = ...,
     ) -> None: ...
 
-def flip[T](func: Callable[[Any, Any], T], a: Any, b: Any) -> T:
-    """Call the function call with the arguments flipped
+def flip[T](func: Callable[[Any, Any], T], a: object, b: object) -> T:
+    """Call the function call with the arguments flipped.
 
     This function is curried.
 
@@ -232,7 +233,7 @@ def flip[T](func: Callable[[Any, Any], T], a: Any, b: Any) -> T:
     ...     return a // b
     >>> cz.functoolz.flip(div, 2, 6)
     3
-    >>> cz.functoolz.flip(div, 2)(4) # Equivalent to div(4, 2)
+    >>> cz.functoolz.flip(div, 2)(4)  # Equivalent to div(4, 2)
     2
 
     This is particularly useful for built in functions and functions defined
@@ -246,15 +247,15 @@ def flip[T](func: Callable[[Any, Any], T], a: Any, b: Any) -> T:
     """
 
 def identity[T](x: T) -> T:
-    """Identity function. Return x
+    """Identity function. Return x.
 
     >>> import cytoolz as cz
     >>> cz.functoolz.identity(3)
     3
     """
 
-class juxt:
-    """Creates a function that calls several functions with the same arguments
+class juxt:  # noqa: N801
+    """Creates a function that calls several functions with the same arguments.
 
     Takes several functions and returns a function that applies its arguments
     to each of those functions then returns a tuple of the results.
@@ -274,14 +275,14 @@ class juxt:
     """
 
     def __init__(self, *funcs: Callable[..., Any]) -> None: ...
-    def __call__(self, *args: Any, **kwargs: Any) -> tuple[Any, ...]: ...
+    def __call__(self, *args: object, **kwargs: object) -> tuple[Any, ...]: ...
 
 def memoize[T](
     func: Callable[..., T],
     cache: MutableMapping[Any, Any] | None = ...,
     key: Callable[..., Any] | None = ...,
 ) -> Callable[..., T]:
-    """Cache a function's result for speedy future evaluation
+    """Cache a function's result for speedy future evaluation.
 
     Considerations:
         Trades memory for speed.
@@ -346,7 +347,7 @@ def pipe[**P, T, T1, T2, T3, T4](
     fn5: Callable[[T3], T4],
 ) -> T4: ...
 def pipe(data: Any, *funcs: Callable[..., Any]) -> Any:
-    """Pipe a value through a sequence of functions
+    """Pipe a value through a sequence of functions.
 
     I.e. ``pipe(data, f, g, h)`` is equivalent to ``h(g(f(data)))``
 
@@ -373,7 +374,7 @@ def thread_first[T, T1](
     val: T,
     *forms: Callable[[T], T1] | tuple[Callable[..., T1], Any],
 ) -> T1:
-    """Thread value through a sequence of functions/forms
+    """Thread value through a sequence of functions/forms.
 
     >>> import cytoolz as cz
     >>> def double(x: int) -> int:
@@ -407,7 +408,7 @@ def thread_last[T, T1](
     val: T,
     *forms: Callable[[T], T1] | tuple[Callable[..., T1], Any],
 ) -> T1:
-    """Thread value through a sequence of functions/forms
+    """Thread value through a sequence of functions/forms.
 
     >>> import cytoolz as cz
     >>> def double(x: int) -> int:

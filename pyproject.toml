@@ -1,10 +1,10 @@
 [project]
-    dependencies    = []
+    dependencies    = ["doctester>=0.1.1"]
     description     = "Type stubs for cytoolz"
     name            = "cytoolz-stubs"
     readme          = "README.md"
     requires-python = ">=3.12"
-    version         = "0.3.1"
+    version         = "0.3.2"
 
 [build-system]
     build-backend = "uv_build"
@@ -15,3 +15,27 @@
 
 [tool.uv.sources]
     doctester = { git = "https://github.com/OutSquareCapital/doctester.git" }
+[tool.ruff]
+    lint.ignore = [
+        "C417",
+        "COM812",
+        "COM812",
+        "D401",
+        "E501",
+        "FIX002",
+        "PLC0415",
+        "PYI021",
+        "S608",
+        "SLF001",
+        "T201",
+        "TC003",
+        "TC006",
+        "TD002",
+        "TD003",
+        "TID252",
+    ]
+    lint.select = ["ALL"]
+    [tool.ruff.format]
+        docstring-code-format = true
+    [tool.ruff.lint.pydocstyle]
+        convention = "google"

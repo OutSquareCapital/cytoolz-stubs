@@ -6,14 +6,16 @@ from collections.abc import (
     Mapping,
     Sequence,
 )
-from typing import Any, Literal, TypeIs, overload
+from typing import Any, Literal, overload
+
+from typing_extensions import TypeIs
 
 def accumulate[T](
     binop: Callable[[T, T], T],
     seq: Iterable[T],
-    initial: Any = ...,
+    initial: object = ...,
 ) -> Iterator[T]:
-    """Repeatedly apply binary function to a sequence, accumulating results
+    """Repeatedly apply binary function to a sequence, accumulating results.
 
     >>> import cytoolz as cz
     >>> from operator import add, mul
@@ -64,7 +66,7 @@ def concat[T](seqs: Iterable[Iterable[T]] | Iterable[T]) -> Iterator[T]:
     """
 
 def concatv[T](*seqs: Iterable[T]) -> Iterator[T]:
-    """Variadic version of concat
+    """Variadic version of concat.
 
     >>> import cytoolz as cz
     >>> list(cz.itertoolz.concatv([], ["a"], ["b", "c"]))
@@ -84,7 +86,7 @@ def cons[T](el: T, seq: Iterable[T]) -> Iterator[T]:
     """
 
 def count(seq: Iterable[Any]) -> int:
-    """Count the number of items in seq
+    """Count the number of items in seq.
 
     >>> import cytoolz as cz
     >>> cz.itertoolz.count([1, 2, 3])
@@ -104,7 +106,7 @@ def diff[T](
     default: T | None = None,
     key: Callable[[T], Any] | None = None,
 ) -> Iterator[tuple[T, ...]]:
-    """Return those items that differ between sequences
+    """Return those items that differ between sequences.
 
     >>> import cytoolz as cz
     >>> list(cz.itertoolz.diff([1, 2, 3], [1, 2, 10, 100]))
@@ -118,12 +120,16 @@ def diff[T](
     A ``key`` function may also be applied to each item to use during
     comparisons:
 
-    >>> list(cz.itertoolz.diff(["apples", "bananas"], ["Apples", "Oranges"], key=str.lower))
+    >>> list(
+    ...     cz.itertoolz.diff(
+    ...         ["apples", "bananas"], ["Apples", "Oranges"], key=str.lower
+    ...     )
+    ... )
     [('bananas', 'Oranges')]
     """
 
 def drop[T](n: int, seq: Iterable[T]) -> Iterator[T]:
-    """The sequence following the first n elements
+    """The sequence following the first n elements.
 
     >>> import cytoolz as cz
     >>> list(cz.itertoolz.drop(2, [10, 20, 30, 40, 50]))
@@ -136,7 +142,7 @@ def drop[T](n: int, seq: Iterable[T]) -> Iterator[T]:
     """
 
 def first[T](seq: Iterable[T]) -> T:
-    """The first element in a sequence
+    """The first element in a sequence.
 
     >>> import cytoolz as cz
     >>> cz.itertoolz.first("ABC")
@@ -144,7 +150,7 @@ def first[T](seq: Iterable[T]) -> T:
     """
 
 def frequencies[T](seq: Iterable[T]) -> dict[T, int]:
-    """Find number of occurrences of each value in seq
+    """Find number of occurrences of each value in seq.
 
     >>> import cytoolz as cz
     >>> cz.itertoolz.frequencies(["cat", "cat", "ox", "pig", "pig", "cat"])
@@ -157,43 +163,45 @@ def frequencies[T](seq: Iterable[T]) -> dict[T, int]:
     """
 
 @overload
-def get[KT, VT](ind: KT, seq: Mapping[KT, VT], default: Any = ...) -> VT: ...
+def get[KT, VT](ind: KT, seq: Mapping[KT, VT], default: object = ...) -> VT: ...
 @overload
-def get[T](ind: int, seq: Sequence[T], default: Any = ...) -> T: ...
+def get[T](ind: int, seq: Sequence[T], default: object = ...) -> T: ...
 @overload
 def get[KT, VT](
     ind: Iterable[KT],
     seq: Mapping[KT, VT],
-    default: Any = ...,
+    default: object = ...,
 ) -> Iterator[VT]: ...
 @overload
-def get[T](ind: Iterable[int], seq: Sequence[T], default: Any = ...) -> Iterator[T]: ...
+def get[T](
+    ind: Iterable[int], seq: Sequence[T], default: object = ...
+) -> Iterator[T]: ...
 def get(ind: Iterable[int], seq: Sequence[Any], default: Any = ...) -> Iterator[Any]:
-    """Get element in a sequence or dict
+    """Get element in a sequence or dict.
 
     Provides standard indexing
     >>> import cytoolz as cz
-    >>> cz.itertoolz.get(1, 'ABC')       # Same as 'ABC'[1]
+    >>> cz.itertoolz.get(1, "ABC")  # Same as 'ABC'[1]
     'B'
-    >>> cz.itertoolz.get([1, 2], 'ABC')  # ('ABC'[1], 'ABC'[2])
+    >>> cz.itertoolz.get([1, 2], "ABC")  # ('ABC'[1], 'ABC'[2])
     ('B', 'C')
 
     Pass a list to get multiple values
-    >>> cz.itertoolz.get([1, 2], 'ABC')  # ('ABC'[1], 'ABC'[2])
+    >>> cz.itertoolz.get([1, 2], "ABC")  # ('ABC'[1], 'ABC'[2])
     ('B', 'C')
 
     Works on any value that supports indexing/getitem.
 
     For example here we see that it works with dictionaries
     >>> phonebook = {"Alice": "555-1234", "Bob": "555-5678", "Charlie": "555-9999"}
-    >>> cz.itertoolz.get('Alice', phonebook)
+    >>> cz.itertoolz.get("Alice", phonebook)
     '555-1234'
 
-    >>> cz.itertoolz.get(['Alice', 'Bob'], phonebook)
+    >>> cz.itertoolz.get(["Alice", "Bob"], phonebook)
     ('555-1234', '555-5678')
 
     Provide a default for missing values
-    >>> cz.itertoolz.get(['Alice', 'Dennis'], phonebook, None)
+    >>> cz.itertoolz.get(["Alice", "Dennis"], phonebook, None)
     ('555-1234', None)
 
     See Also:
@@ -202,7 +210,7 @@ def get(ind: Iterable[int], seq: Sequence[Any], default: Any = ...) -> Iterator[
     """
 
 def groupby[T, K](key: Callable[[T], K] | K, seq: Iterable[T]) -> dict[K, list[T]]:
-    """Group a collection by a key function
+    """Group a collection by a key function.
 
     >>> import cytoolz as cz
     >>> from typing import TypedDict
@@ -238,7 +246,7 @@ def groupby[T, K](key: Callable[[T], K] | K, seq: Iterable[T]) -> dict[K, list[T
     """
 
 def interleave[T](seqs: Iterable[Iterable[T]]) -> Iterator[T]:
-    """Interleave a sequence of sequences
+    """Interleave a sequence of sequences.
 
     >>> import cytoolz as cz
     >>> list(cz.itertoolz.interleave([[1, 2], [3, 4]]))
@@ -253,7 +261,7 @@ def interleave[T](seqs: Iterable[Iterable[T]]) -> Iterator[T]:
     """
 
 def interpose[T, E](el: E, seq: Iterable[T]) -> Iterator[T | E]:
-    """Introduce element between each pair of elements in seq
+    """Introduce element between each pair of elements in seq.
 
     >>> import cytoolz as cz
     >>> list(cz.itertoolz.interpose("a", [1, 2, 3]))
@@ -261,7 +269,7 @@ def interpose[T, E](el: E, seq: Iterable[T]) -> Iterator[T | E]:
     """
 
 def isdistinct(seq: Collection[Any]) -> bool:
-    """All values in sequence are distinct
+    """All values in sequence are distinct.
 
     >>> import cytoolz as cz
     >>> cz.itertoolz.isdistinct([1, 2, 3])
@@ -276,11 +284,11 @@ def isdistinct(seq: Collection[Any]) -> bool:
     """
 
 @overload
-def isiterable(x: Any | Collection[Any]) -> TypeIs[Collection[Any]]: ...
+def isiterable(x: object | Collection[object]) -> TypeIs[Collection[Any]]: ...
 @overload
-def isiterable(x: Any | Iterator[Any]) -> TypeIs[Iterator[Any]]: ...
+def isiterable(x: object | Iterator[object]) -> TypeIs[Iterator[Any]]: ...
 @overload
-def isiterable(x: Any | Iterable[Any]) -> TypeIs[Iterable[Any]]: ...
+def isiterable(x: object | Iterable[object]) -> TypeIs[Iterable[Any]]: ...
 def isiterable(x: Any) -> TypeIs[Iterable[Any]]:
     """Is x iterable?
 
@@ -294,7 +302,7 @@ def isiterable(x: Any) -> TypeIs[Iterable[Any]]:
     """
 
 def iterate[T, T1](func: Callable[[T], T1], x: T) -> Iterator[T1]:
-    """Repeatedly apply a function func onto an original input
+    """Repeatedly apply a function func onto an original input.
 
     >>> import cytoolz as cz
     >>> def inc(x: int) -> int:
@@ -325,10 +333,10 @@ def join[T1, T2, KT](
     leftseq: Iterable[T1],
     rightkey: Callable[[T2], KT] | KT,
     rightseq: Iterable[T2],
-    left_default: Any = ...,
-    right_default: Any = ...,
+    left_default: object = ...,
+    right_default: object = ...,
 ) -> Iterator[tuple[T1, T2]]:
-    """Join two sequences on common attributes
+    """Join two sequences on common attributes.
 
     This is a semi-streaming operation.
     - The LEFT sequence is fully evaluated and placed into memory.
@@ -356,7 +364,9 @@ def join[T1, T2, KT](
     ... ]
     >>> # Vacation opportunities
     >>> # In what cities do people have friends?
-    >>> result = cz.itertoolz.join(cz.itertoolz.second, friends, cz.itertoolz.first, cities)
+    >>> result = cz.itertoolz.join(
+    ...     cz.itertoolz.second, friends, cz.itertoolz.first, cities
+    ... )
     >>> sorted_res = sorted(cz.itertoolz.unique(result))
     >>> [(i[0][0], i[1][1]) for i in sorted_res]
     [
@@ -395,7 +405,9 @@ def join[T1, T2, KT](
     The join is implemented as a hash join and the keys of leftseq must be hashable.
 
     Additionally, if right_default is defined, then keys of rightseq must also be hashable.
-    >>> join_res = cz.itertoolz.join(cz.itertoolz.second, friends, cz.itertoolz.first, cities)
+    >>> join_res = cz.itertoolz.join(
+    ...     cz.itertoolz.second, friends, cz.itertoolz.first, cities
+    ... )
     >>> join_head = cz.itertoolz.take(2, join_res)
     >>> list(join_head)
     [(('Edith', 'Alice'), ('Alice', 'NYC')), (('Zhao', 'Alice'), ('Alice', 'NYC'))]
@@ -407,7 +419,7 @@ def join[T1, T2, KT](
     """
 
 def last[T](seq: Iterable[T]) -> T:
-    """The last element in a sequence
+    """The last element in a sequence.
 
     >>> import cytoolz as cz
     >>> cz.itertoolz.last("ABC")
@@ -421,7 +433,11 @@ def mapcat[T1, T2](
     """Apply func to each sequence in seqs, concatenating results.
 
     >>> import cytoolz as cz
-    >>> list(cz.itertoolz.mapcat(lambda s: [c.upper() for c in s], [["a", "b"], ["c", "d", "e"]]))
+    >>> list(
+    ...     cz.itertoolz.mapcat(
+    ...         lambda s: [c.upper() for c in s], [["a", "b"], ["c", "d", "e"]]
+    ...     )
+    ... )
     ['A', 'B', 'C', 'D', 'E']
     """
 
@@ -429,7 +445,7 @@ def merge_sorted[T](
     *seqs: Iterable[T],
     key: Callable[[T], Any] | None = ...,
 ) -> Iterator[T]:
-    """Merge and sort a collection of sorted collections
+    """Merge and sort a collection of sorted collections.
 
     This works lazily and only keeps one value from each iterable in memory.
     >>> import cytoolz as cz
@@ -445,7 +461,7 @@ def merge_sorted[T](
     """
 
 def nth[T](n: int, seq: Iterable[T]) -> T:
-    """The nth element in a sequence
+    """The nth element in a sequence.
 
     >>> import cytoolz as cz
     >>> cz.itertoolz.nth(1, "ABC")
@@ -486,14 +502,14 @@ def partition[T](
 def partition[T](
     n: int,
     seq: Iterable[T],
-    pad: Any | None = None,
+    pad: object | None = None,
 ) -> Iterator[tuple[T, ...]]: ...
 def partition(
     n: int,
     seq: Iterable[Any],
     pad: Any | None = None,
 ) -> Iterator[tuple[Any, ...]]:
-    """Partition sequence into tuples of length n
+    """Partition sequence into tuples of length n.
 
     >>> import cytoolz as cz
     >>> list(cz.itertoolz.partition(2, [1, 2, 3, 4]))
@@ -514,7 +530,7 @@ def partition(
     """
 
 def partition_all[T](n: int, seq: Iterable[T]) -> Iterator[tuple[T, ...]]:
-    """Partition all elements of sequence into tuples of length at most n
+    """Partition all elements of sequence into tuples of length at most n.
 
     The final tuple may be shorter to accommodate extra elements.
     >>> import cytoolz as cz
@@ -530,7 +546,7 @@ def partition_all[T](n: int, seq: Iterable[T]) -> Iterator[tuple[T, ...]]:
     """
 
 def peek[T](seq: Iterable[T]) -> tuple[T, Iterator[T]]:
-    """Retrieve the next element of a sequence
+    """Retrieve the next element of a sequence.
 
     Returns the first element and an iterable equivalent to the original
     sequence, still having the element retrieved.
@@ -545,7 +561,7 @@ def peek[T](seq: Iterable[T]) -> tuple[T, Iterator[T]]:
     """
 
 def peekn[T](n: int, seq: Iterable[T]) -> tuple[tuple[T, ...], Iterator[T]]:
-    """Retrieve the next n elements of a sequence
+    """Retrieve the next n elements of a sequence.
 
     Returns a tuple of the first n elements and an iterable equivalent
     to the original, still having the elements retrieved.
@@ -561,7 +577,7 @@ def peekn[T](n: int, seq: Iterable[T]) -> tuple[tuple[T, ...], Iterator[T]]:
 def pluck(
     ind: str | int | list[str] | list[int],
     seqs: Iterable[Sequence[Any] | Mapping[str, Any] | Mapping[int, Any]],
-    default: Any = ...,
+    default: object = ...,
 ) -> Iterator[Any]:
     """Plucks an element or several elements from each item in a sequence.
 
@@ -591,9 +607,9 @@ def pluck(
 def random_sample[T](
     prob: float,
     seq: Iterable[T],
-    random_state: Any = ...,
+    random_state: object = ...,
 ) -> Iterator[T]:
-    """Return elements from a sequence with probability of prob
+    """Return elements from a sequence with probability of prob.
 
     Returns a lazy iterator of random items from seq.
 
@@ -604,9 +620,9 @@ def random_sample[T](
 
     >>> import cytoolz as cz
     >>> seq = list(range(100))
-    >>> list(cz.itertoolz.random_sample(0.1, seq)) # doctest: +SKIP
+    >>> list(cz.itertoolz.random_sample(0.1, seq))  # doctest: +SKIP
     [6, 9, 19, 35, 45, 50, 58, 62, 68, 72, 78, 86, 95]
-    >>> list(cz.itertoolz.random_sample(0.1, seq)) # doctest: +SKIP
+    >>> list(cz.itertoolz.random_sample(0.1, seq))  # doctest: +SKIP
     [6, 44, 54, 61, 69, 94]
 
     Providing an integer seed for ``random_state`` will result in
@@ -614,16 +630,18 @@ def random_sample[T](
 
     Given the same seed it will return the same sample every time.
 
-    >>> list(cz.itertoolz.random_sample(0.1, seq, random_state=2016)) # doctest: +SKIP
+    >>> list(cz.itertoolz.random_sample(0.1, seq, random_state=2016))  # doctest: +SKIP
     [7, 9, 19, 25, 30, 32, 34, 48, 59, 60, 81, 98]
-    >>> list(cz.itertoolz.random_sample(0.1, seq, random_state=2016)) # doctest: +SKIP
+    >>> list(cz.itertoolz.random_sample(0.1, seq, random_state=2016))  # doctest: +SKIP
     [7, 9, 19, 25, 30, 32, 34, 48, 59, 60, 81, 98]
 
     ``random_state`` can also be any object with a method ``random`` that
     returns floats between 0.0 and 1.0 (exclusive).
     >>> from random import Random
     >>> randobj = Random(2016)
-    >>> list(cz.itertoolz.random_sample(0.1, seq, random_state=randobj)) # doctest: +SKIP
+    >>> list(
+    ...     cz.itertoolz.random_sample(0.1, seq, random_state=randobj)
+    ... )  # doctest: +SKIP
     [7, 9, 19, 25, 30, 32, 34, 48, 59, 60, 81, 98]
     """
 
@@ -631,9 +649,9 @@ def reduceby[T, K, VT](
     key: Callable[[T], K] | K,
     binop: Callable[[VT, T], VT],
     seq: Iterable[T],
-    init: Any = ...,
+    init: object = ...,
 ) -> dict[K, VT]:
-    """Perform a simultaneous groupby and reduction
+    """Perform a simultaneous groupby and reduction.
 
     The computation:
     ```python
@@ -706,7 +724,7 @@ def reduceby[T, K, VT](
     """
 
 def remove[T](predicate: Callable[[T], bool], seq: Iterable[T]) -> Iterator[T]:
-    """Return those items of sequence for which predicate(item) is False
+    """Return those items of sequence for which predicate(item) is False.
 
     >>> import cytoolz as cz
     >>> def iseven(x: int) -> bool:
@@ -716,7 +734,7 @@ def remove[T](predicate: Callable[[T], bool], seq: Iterable[T]) -> Iterator[T]:
     """
 
 def second[T](seq: Iterable[T]) -> T:
-    """The second element in a sequence
+    """The second element in a sequence.
 
     >>> import cytoolz as cz
     >>> cz.itertoolz.second("ABC")
@@ -742,7 +760,7 @@ def sliding_window[T](
 @overload
 def sliding_window[T](n: int, seq: Iterable[T]) -> Iterator[tuple[T, ...]]: ...
 def sliding_window(n: int, seq: Iterable[Any]) -> Iterator[tuple[Any, ...]]:
-    """A sequence of overlapping subsequences
+    """A sequence of overlapping subsequences.
 
     >>> import cytoolz as cz
     >>> from collections.abc import Sequence
@@ -795,7 +813,7 @@ def take[T](n: int, seq: Iterable[T]) -> Iterator[T]:
     """
 
 def take_nth[T](n: int, seq: Iterable[T]) -> Iterator[T]:
-    """Every nth item in seq
+    """Every nth item in seq.
 
     >>> import cytoolz as cz
     >>> list(cz.itertoolz.take_nth(2, [10, 20, 30, 40, 50]))
@@ -843,7 +861,7 @@ def topk(
     seq: Iterable[Any],
     key: Callable[[Any], Any] | None = None,
 ) -> tuple[Any, ...]:
-    """Find the k largest elements of a sequence
+    """Find the k largest elements of a sequence.
 
     Operates lazily in ``n*log(k)`` time
     >>> import cytoolz as cz
@@ -860,7 +878,7 @@ def topk(
     """
 
 def unique[T](seq: Iterable[T], key: Callable[[T], Any] | None = None) -> Iterator[T]:
-    """Return only unique elements of a sequence
+    """Return only unique elements of a sequence.
 
     >>> import cytoolz as cz
     >>> tuple(cz.itertoolz.unique((1, 2, 3)))

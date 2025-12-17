@@ -1,13 +1,11 @@
-"""
-Alternate namespace for cytoolz such that all functions are curried
+"""Alternate namespace for cytoolz such that all functions are curried.
 
 Currying provides implicit partial evaluation of all functions
 
 Example:
-
     Get usually requires two arguments, an index and a collection
     >>> from cytoolz.curried import get
-    >>> get(0, ('a', 'b'))
+    >>> get(0, ("a", "b"))
     'a'
 
     When we use it in higher order functions we o_ften want to pass a partially
@@ -40,7 +38,7 @@ dissoc = _ft.curry(_dt.dissoc)
 do = _ft.curry(_ft.do)
 drop = _ft.curry(_it.drop)
 excepts = ...
-filter = ...
+filter = ...  # noqa: A001
 get = _ft.curry(_it.get)
 get_in = _ft.curry(_dt.get_in)
 groupby = _ft.curry(_it.groupby)
@@ -51,7 +49,7 @@ iterate = _ft.curry(_it.iterate)
 join = _ft.curry(_it.join)
 keyfilter = _ft.curry(_dt.keyfilter)
 keymap = _ft.curry(_dt.keymap)
-map = ...
+map = ...  # noqa: A001
 mapcat = _ft.curry(_it.mapcat)
 nth = _ft.curry(_it.nth)
 partial = _ft.curry(functools.partial)
@@ -65,7 +63,7 @@ reduce = ...
 reduceby = _ft.curry(_it.reduceby)
 remove = _ft.curry(_it.remove)
 sliding_window = _ft.curry(_it.sliding_window)
-sorted = ...
+sorted = ...  # noqa: A001
 tail = _ft.curry(_it.tail)
 take = _ft.curry(_it.take)
 take_nth = _ft.curry(_it.take_nth)

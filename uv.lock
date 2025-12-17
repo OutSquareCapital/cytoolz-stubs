@@ -1,6 +1,19 @@
 version = 1
 revision = 3
 requires-python = ">=3.12"
+resolution-markers = [
+    "python_full_version >= '3.13'",
+    "python_full_version < '3.13'",
+]
+
+[[package]]
+name = "colorama"
+version = "0.4.6"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d8/53/6f443c9a4a8358a93a6792e2acffb9d9d5cb0a5cfd8802644b7b1c9a02e4/colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44", size = 27697, upload-time = "2022-10-25T02:36:22.414Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d1/d6/3965ed04c63042e047cb6a3e6ed1a63a35087b6a609aa3a15ed8ac56c221/colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6", size = 25335, upload-time = "2022-10-25T02:36:20.889Z" },
+]
 
 [[package]]
 name = "cytoolz"
@@ -121,8 +134,11 @@ wheels = [
 
 [[package]]
 name = "cytoolz-stubs"
-version = "0.3.1"
+version = "0.3.2"
 source = { editable = "." }
+dependencies = [
+    { name = "doctester" },
+]
 
 [package.dev-dependencies]
 dev = [
@@ -132,6 +148,7 @@ dev = [
 ]
 
 [package.metadata]
+requires-dist = [{ name = "doctester", git = "https://github.com/OutSquareCapital/doctester.git" }]
 
 [package.metadata.requires-dev]
 dev = [
@@ -142,8 +159,76 @@ dev = [
 
 [[package]]
 name = "doctester"
-version = "0.1.1"
-source = { git = "https://github.com/OutSquareCapital/doctester.git#a0845bcf168af77a07602e0d064e28ee19814cac" }
+version = "0.1.3"
+source = { git = "https://github.com/OutSquareCapital/doctester.git#e3d8071cb9fac32ce8441de8237ed9f3ae1deb41" }
+dependencies = [
+    { name = "loguru" },
+    { name = "pyochain", version = "0.5.52", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.13'" },
+    { name = "pyochain", version = "0.6.0.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13'" },
+]
+
+[[package]]
+name = "loguru"
+version = "0.7.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "win32-setctime", marker = "sys_platform == 'win32'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/3a/05/a1dae3dffd1116099471c643b8924f5aa6524411dc6c63fdae648c4f1aca/loguru-0.7.3.tar.gz", hash = "sha256:19480589e77d47b8d85b2c827ad95d49bf31b0dcde16593892eb51dd18706eb6", size = 63559, upload-time = "2024-12-06T11:20:56.608Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0c/29/0348de65b8cc732daa3e33e67806420b2ae89bdce2b04af740289c5c6c8c/loguru-0.7.3-py3-none-any.whl", hash = "sha256:31a33c10c8e1e10422bfd431aeb5d351c7cf7fa671e3c4df004162264b28220c", size = 61595, upload-time = "2024-12-06T11:20:54.538Z" },
+]
+
+[[package]]
+name = "more-itertools"
+version = "10.8.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ea/5d/38b681d3fce7a266dd9ab73c66959406d565b3e85f21d5e66e1181d93721/more_itertools-10.8.0.tar.gz", hash = "sha256:f638ddf8a1a0d134181275fb5d58b086ead7c6a72429ad725c67503f13ba30bd", size = 137431, upload-time = "2025-09-02T15:23:11.018Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a4/8e/469e5a4a2f5855992e425f3cb33804cc07bf18d48f2db061aec61ce50270/more_itertools-10.8.0-py3-none-any.whl", hash = "sha256:52d4362373dcf7c52546bc4af9a86ee7c4579df9a8dc268be0a2f949d376cc9b", size = 69667, upload-time = "2025-09-02T15:23:09.635Z" },
+]
+
+[[package]]
+name = "pyochain"
+version = "0.5.52"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version < '3.13'",
+]
+dependencies = [
+    { name = "cytoolz", marker = "python_full_version < '3.13'" },
+    { name = "more-itertools", marker = "python_full_version < '3.13'" },
+    { name = "rolling", marker = "python_full_version < '3.13'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/90/60/3425dd1dcb28e33213257265aa31a85b898fc7174da5ed6856a0a39d0c28/pyochain-0.5.52.tar.gz", hash = "sha256:9cfd681af31199932f966d36bc4e2c6d1c05ebc3df083fa5725af1eb770a69a6", size = 49851, upload-time = "2025-12-01T15:16:37.683Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6a/31/7fd1b7dda6b7937b6273005ec956f94edeaa999c02078325f9a851663b8b/pyochain-0.5.52-py3-none-any.whl", hash = "sha256:0fb36bb96d398b05fe0e7d9b00b1c68bb26f8fc0bd9774625742fa552eb314da", size = 67199, upload-time = "2025-12-01T15:16:36.357Z" },
+]
+
+[[package]]
+name = "pyochain"
+version = "0.6.0.3"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.13'",
+]
+dependencies = [
+    { name = "cytoolz", marker = "python_full_version >= '3.13'" },
+    { name = "more-itertools", marker = "python_full_version >= '3.13'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/c3/67/1575b0786a13ff8fb75469c1562f752a6d0647e552223482662615b2feb2/pyochain-0.6.0.3.tar.gz", hash = "sha256:f809baa1caf68279c7d89a492cce0c975d95dbb493b655fe01086df5317159ce", size = 53968, upload-time = "2025-12-17T16:35:41.347Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/3e/3a/375377ad525128120b9273c127e7449070e3f5d493db4160ca74f414a0b0/pyochain-0.6.0.3-py3-none-any.whl", hash = "sha256:e00eb2d89eae3c4800599b61d5ded1a16ae7c58776c2f9006178f966cec6c974", size = 73910, upload-time = "2025-12-17T16:35:42.88Z" },
+]
+
+[[package]]
+name = "rolling"
+version = "0.5.0"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/64/94/f9d34899f0484839be8afa0a636a3a362e545fb6455039db460766f36ff6/rolling-0.5.0-py3-none-any.whl", hash = "sha256:68862be701c3a1cbf0c2fab391f8f29984b80371ac36ebbfd22056dc3604e60e", size = 29322, upload-time = "2023-09-16T20:30:15.206Z" },
+]
 
 [[package]]
 name = "ruff"
@@ -178,4 +263,13 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/11/d6/114b492226588d6ff54579d95847662fc69196bdeec318eb45393b24c192/toolz-1.1.0.tar.gz", hash = "sha256:27a5c770d068c110d9ed9323f24f1543e83b2f300a687b7891c1a6d56b697b5b", size = 52613, upload-time = "2025-10-17T04:03:21.661Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/fb/12/5911ae3eeec47800503a238d971e51722ccea5feb8569b735184d5fcdbc0/toolz-1.1.0-py3-none-any.whl", hash = "sha256:15ccc861ac51c53696de0a5d6d4607f99c210739caf987b5d2054f3efed429d8", size = 58093, upload-time = "2025-10-17T04:03:20.435Z" },
+]
+
+[[package]]
+name = "win32-setctime"
+version = "1.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/b3/8f/705086c9d734d3b663af0e9bb3d4de6578d08f46b1b101c2442fd9aecaa2/win32_setctime-1.2.0.tar.gz", hash = "sha256:ae1fdf948f5640aae05c511ade119313fb6a30d7eabe25fef9764dca5873c4c0", size = 4867, upload-time = "2024-12-07T15:28:28.314Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e1/07/c6fe3ad3e685340704d314d765b7912993bcb8dc198f0e7a89382d37974b/win32_setctime-1.2.0-py3-none-any.whl", hash = "sha256:95d644c4e708aba81dc3704a116d8cbc974d70b3bdb8be1d150e36be6e9d1390", size = 4083, upload-time = "2024-12-07T15:28:26.465Z" },
 ]

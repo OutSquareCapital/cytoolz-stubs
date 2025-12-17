@@ -1,4 +1,5 @@
-"""dicttoolz
+"""dicttoolz.
+
 ========
 
 - assoc : Return a new dict with new key value pair
@@ -17,7 +18,9 @@
 """
 
 from collections.abc import Callable, Iterable, Mapping, MutableMapping, Sequence
-from typing import Any, TypeIs, overload
+from typing import Any, overload
+
+from typing_extensions import TypeIs
 
 @overload
 def assoc[K, V, F: MutableMapping[Any, Any]](
@@ -30,7 +33,7 @@ def assoc[K, V, F: MutableMapping[Any, Any]](
 @overload
 def assoc[K, V](d: Mapping[K, V], key: K, value: V) -> dict[K, V]: ...
 def assoc[K, V](d: dict[K, V], key: K, value: V) -> dict[K, V]:
-    """Return a new dict with new key value pair
+    """Return a new dict with new key value pair.
 
     New dict has d[key] set to value. Does not modify the initial dictionary.
 
@@ -45,7 +48,7 @@ def assoc[K, V](d: dict[K, V], key: K, value: V) -> dict[K, V]:
 def assoc_in[F: MutableMapping[Any, Any]](
     d: Mapping[Any, Any],
     keys: Sequence[Any],
-    value: Any,
+    value: object,
     *,
     factory: Callable[[], F],
 ) -> F: ...
@@ -53,7 +56,7 @@ def assoc_in[F: MutableMapping[Any, Any]](
 def assoc_in(
     d: Mapping[Any, Any],
     keys: Sequence[Any],
-    value: Any,
+    value: object,
 ) -> dict[Any, Any]: ...
 def assoc_in[K, V](
     d: dict[K, V],
@@ -61,13 +64,13 @@ def assoc_in[K, V](
     value: V,
     factory: Callable[[], dict[K, V]] = ...,
 ) -> dict[K, V]:
-    """Return a new dict with new, potentially nested, key value pair
+    """Return a new dict with new, potentially nested, key value pair.
 
     >>> import cytoolz as cz
     >>> purchase = {
-    ... "name": "Alice",
-    ... "order": {"items": ["Apple", "Orange"], "costs": [0.50, 1.25]},
-    ... "credit card": "5555-1234-1234-1234",
+    ...     "name": "Alice",
+    ...     "order": {"items": ["Apple", "Orange"], "costs": [0.50, 1.25]},
+    ...     "credit card": "5555-1234-1234-1234",
     ... }
     >>> cz.dicttoolz.assoc_in(purchase, ["order", "costs"], [0.25, 1.00])
     {
@@ -164,7 +167,7 @@ def itemfilter[K, V](
     d: Mapping[K, V],
     factory: Callable[[], dict[K, V]] = ...,
 ) -> dict[K, V]:
-    """Filter items in dictionary by item
+    """Filter items in dictionary by item.
 
     >>> import cytoolz as cz
     >>> def isvalid(item: tuple[int, int]) -> bool:
@@ -204,7 +207,7 @@ def itemmap[K, V, K1, V1](
     func: Callable[[tuple[K, V]], tuple[K1, V1]] | type[reversed[Any]],
     d: dict[K, V],
 ) -> dict[K1, V1] | dict[V, K]:
-    """Apply function to items of dictionary
+    """Apply function to items of dictionary.
 
     >>> import cytoolz as cz
     >>> accountids = {"Alice": 10, "Bob": 20}
@@ -234,7 +237,7 @@ def keyfilter[K, V, U](
     d: Mapping[K, V],
     factory: Callable[[], dict[K, V]] = ...,
 ) -> dict[K, V] | dict[U, V]:
-    """Filter items in dictionary by key
+    """Filter items in dictionary by key.
 
     >>> import cytoolz as cz
     >>> def iseven(x: int) -> bool:
@@ -267,7 +270,7 @@ def keymap[K, V, K1](
     d: dict[K, V],
     factory: Callable[[], dict[K1, V]] = ...,
 ) -> dict[K1, V]:
-    """Apply function to keys of dictionary
+    """Apply function to keys of dictionary.
 
     >>> import cytoolz as cz
     >>> bills = {"Alice": [20, 15, 30], "Bob": [10, 35]}
@@ -284,7 +287,7 @@ def merge[K, V](
     *dicts: Mapping[K, V],
     factory: Callable[[], dict[K, V]] = ...,
 ) -> dict[K, V]:
-    """Merge a collection of dictionaries
+    """Merge a collection of dictionaries.
 
     >>> import cytoolz as cz
     >>> cz.dicttoolz.merge({1: "one"}, {2: "two"})
@@ -304,7 +307,7 @@ def merge_with[K, V](
     *dicts: Mapping[K, V],
     factory: Callable[[], dict[K, V]] = ...,
 ) -> dict[K, V]:
-    """Merge dictionaries and apply function to combined values
+    """Merge dictionaries and apply function to combined values.
 
     A key may occur in more than one dict, and all values mapped from the key
     will be passed to the function as a list, such as func([val1, val2, ...]).
@@ -325,7 +328,7 @@ def update_in[T: Mapping[Any, Any]](
     d: T,
     keys: Sequence[Any],
     func: Callable[[Any], Any],
-    default: Any | None,
+    default: object | None,
     factory: Callable[[], T],
 ) -> T: ...
 @overload
@@ -333,7 +336,7 @@ def update_in[K, V](
     d: dict[K, V],
     keys: Sequence[Any],
     func: Callable[[Any], Any],
-    default: Any | None,
+    default: object | None,
     factory: Callable[[], dict[K, V]] = ...,
 ) -> dict[K, V]: ...
 @overload
@@ -341,7 +344,7 @@ def update_in[K, V, U](
     d: dict[K, V],
     keys: Sequence[Any],
     func: Callable[[Any], Any],
-    default: Any | None,
+    default: object | None,
     factory: Callable[[], dict[K, U]] = ...,
 ) -> dict[K, U]: ...
 @overload
@@ -349,10 +352,17 @@ def update_in[K, V](
     d: dict[K, V],
     keys: Sequence[Any],
     func: Callable[[Any], Any],
-    default: Any | None = None,
+    default: object | None = None,
     factory: Callable[[], dict[K, V]] = ...,
-) -> dict[K, V]:
-    """Update value in a (potentially) nested dictionary
+) -> dict[K, V]: ...
+def update_in(
+    d: dict[Any, Any],
+    keys: Sequence[Any],
+    func: Callable[[Any], Any],
+    default: object | None = None,
+    factory: Callable[[], dict[Any, Any]] = ...,
+) -> dict[Any, Any]:
+    """Update value in a (potentially) nested dictionary.
 
     inputs:
     d - dictionary on which to operate
@@ -407,7 +417,7 @@ def valfilter(
     d: Mapping[Any, Any],
     factory: Callable[[], dict[Any, Any]] = ...,
 ) -> dict[Any, Any]:
-    """Filter items in dictionary by value
+    """Filter items in dictionary by value.
 
     >>> import cytoolz as cz
     >>> def iseven(x: int) -> bool:
@@ -440,7 +450,7 @@ def valmap[K, V, V1](
     d: dict[K, V],
     factory: Callable[[], dict[Any, Any]] | None = ...,
 ) -> dict[K, V1]:
-    """Apply function to values of dictionary
+    """Apply function to values of dictionary.
 
     >>> import cytoolz as cz
     >>> bills = {"Alice": [20, 15, 30], "Bob": [10, 35]}

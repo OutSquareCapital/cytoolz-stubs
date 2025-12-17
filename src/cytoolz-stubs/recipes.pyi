@@ -1,5 +1,5 @@
-"""
-recipes
+"""recipes.
+
 ========
 
 - countby : Count elements of a collection by a key function
@@ -10,8 +10,7 @@ from collections.abc import Callable, Iterable, Iterator
 from typing import Any
 
 def countby[T, K](key: Callable[[T], K], seq: Iterable[T]) -> dict[K, int]:
-    """
-    Count elements of a collection by a key function
+    """Count elements of a collection by a key function.
 
     >>> import cytoolz as cz
     >>> cz.recipes.countby(len, ["cat", "mouse", "dog"])
@@ -25,12 +24,11 @@ def countby[T, K](key: Callable[[T], K], seq: Iterable[T]) -> dict[K, int]:
     See Also:
         groupby
     """
-    ...
 
 def partitionby[T](
     func: Callable[[T], Any], seq: Iterable[T]
 ) -> Iterator[tuple[T, ...]]:
-    """Partition a sequence according to a function
+    """Partition a sequence according to a function.
 
     Partition `s` into a sequence of lists such that, when traversing
     `s`, every time the output of `func` changes a new list is started
@@ -47,9 +45,8 @@ def partitionby[T](
     >>> list(cz.recipes.partitionby(is_large, [1, 2, 1, 99, 88, 33, 99, -1, 5]))
     [(1, 2, 1), (99, 88, 33, 99), (-1, 5)]
 
-    See also:
+    See Also:
         partition
         groupby
         itertools.groupby
     """
-    ...

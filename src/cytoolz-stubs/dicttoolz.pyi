@@ -113,22 +113,22 @@ def dissoc[K, V](
     """
 
 @overload
-def get_in[K, V, D](
+def get_in[K, D, V](
     keys: Iterable[K] | K,
-    coll: Iterable[V] | Mapping[K, V],
-    default: V,
+    coll: Mapping[K, V] | Iterable[V],
+    default: D,
     no_default: bool | None = ...,
-) -> V: ...
+) -> object | D: ...
 @overload
-def get_in[K, V, D](
+def get_in[K, D](
     keys: Iterable[K] | K,
-    coll: Iterable[V] | Mapping[K, V],
+    coll: Mapping[K, Any] | Iterable[Any],
     default: D = ...,
     no_default: bool | None = ...,
-) -> V | D: ...
-def get_in[K, V](
+) -> object | D: ...
+def get_in[K](
     keys: Iterable[K] | K,
-    coll: Iterable[V] | Mapping[K, V],
+    coll: Mapping[K, Any] | Iterable[Any],
     default: Any | None = ...,
     no_default: bool | None = ...,
 ) -> Any:
@@ -433,6 +433,26 @@ def valfilter(
 
     """
 
+@overload
+def valmap[K, V_inner, V_outer](
+    valfunc: type[dict[V_inner, V_outer]],
+    d: Mapping[K, Iterable[tuple[V_inner, V_outer]]],
+) -> dict[K, dict[V_inner, V_outer]]: ...
+@overload
+def valmap[K, V_inner](
+    valfunc: type[list[V_inner]],
+    d: Mapping[K, Iterable[V_inner]],
+) -> dict[K, list[V_inner]]: ...
+@overload
+def valmap[K, V_inner](
+    valfunc: type[tuple[V_inner, ...]],
+    d: Mapping[K, Iterable[V_inner]],
+) -> dict[K, tuple[V_inner, ...]]: ...
+@overload
+def valmap[K, V_inner](
+    valfunc: type[set[V_inner]],
+    d: Mapping[K, Iterable[V_inner]],
+) -> dict[K, set[V_inner]]: ...
 @overload
 def valmap[K, V, V1](
     valfunc: Callable[[V], V1],

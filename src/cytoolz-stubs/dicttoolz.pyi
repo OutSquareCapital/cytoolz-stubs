@@ -113,19 +113,19 @@ def dissoc[K, V](
     """
 
 @overload
-def get_in[K, D, V](
+def get_in[K](
     keys: Iterable[K] | K,
-    coll: Mapping[K, V] | Iterable[V],
-    default: D,
+    coll: Mapping[K, Any] | Iterable[Any],
+    default: None = None,
     no_default: bool | None = ...,
-) -> object | D: ...
+) -> Any | None: ...  # noqa: ANN401
 @overload
 def get_in[K, D](
     keys: Iterable[K] | K,
     coll: Mapping[K, Any] | Iterable[Any],
-    default: D = ...,
+    default: D,
     no_default: bool | None = ...,
-) -> object | D: ...
+) -> Any | D: ...  # noqa: ANN401
 def get_in[K](
     keys: Iterable[K] | K,
     coll: Mapping[K, Any] | Iterable[Any],

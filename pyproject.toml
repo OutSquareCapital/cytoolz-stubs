@@ -1,5 +1,5 @@
 [project]
-    dependencies    = ["doctester>=0.1.1"]
+    dependencies    = ["stubtester>=0.1.1"]
     description     = "Type stubs for cytoolz"
     name            = "cytoolz-stubs"
     readme          = "README.md"
@@ -8,13 +8,13 @@
 
 [build-system]
     build-backend = "uv_build"
-    requires      = ["uv_build>=0.8.15,<0.9.0"]
+    requires      = ["uv_build>=0.9.18"]
 
 [dependency-groups]
-    dev = ["cytoolz>=1.1.0", "doctester", "ruff>=0.14.9"]
+    dev = ["cytoolz>=1.1.0", "ruff>=0.14.9", "stubtester"]
 
 [tool.uv.sources]
-    doctester = { git = "https://github.com/OutSquareCapital/doctester.git" }
+    stubtester = { git = "https://github.com/OutSquareCapital/stubtester.git" }
 [tool.ruff]
     lint.ignore = [
         "C417",

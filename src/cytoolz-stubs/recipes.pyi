@@ -19,7 +19,7 @@ def countby[T, K](key: Callable[[T], K], seq: Iterable[T]) -> dict[K, int]:
     >>> def iseven(x: int) -> bool:
     ...     return x % 2 == 0
     >>> cz.recipes.countby(iseven, [1, 2, 3])
-    {True: 1, False: 2}
+    {False: 2, True: 1}
 
     See Also:
         groupby

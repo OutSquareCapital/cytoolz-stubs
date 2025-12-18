@@ -220,7 +220,7 @@ def groupby[T, K](key: Callable[[T], K] | K, seq: Iterable[T]) -> dict[K, list[T
     >>> from typing import TypedDict
     >>> names = ["Alice", "Bob", "Charlie", "Dan", "Edith", "Frank"]
     >>> cz.itertoolz.groupby(len, names)
-    {3: ['Bob', 'Dan'], 5: ['Alice', 'Edith', 'Frank'], 7: ['Charlie']}
+    {5: ['Alice', 'Edith', 'Frank'], 3: ['Bob', 'Dan'], 7: ['Charlie']}
     >>>
     >>> def iseven(x: int) -> bool:
     ...     return x % 2 == 0
@@ -236,11 +236,8 @@ def groupby[T, K](key: Callable[[T], K] | K, seq: Iterable[T]) -> dict[K, list[T
     ...     {"name": "Bob", "gender": "M"},
     ...     {"name": "Charlie", "gender": "M"},
     ... ]
-    >>> result = cz.itertoolz.groupby("gender", data)
-    >>> result
-    {'F': [{'gender': 'F', 'name': 'Alice'}],
-    'M': [{'gender': 'M', 'name': 'Bob'},
-        {'gender': 'M', 'name': 'Charlie'}]}
+    >>> cz.itertoolz.groupby("gender", data)
+    {'F': [{'name': 'Alice', 'gender': 'F'}], 'M': [{'name': 'Bob', 'gender': 'M'}, {'name': 'Charlie', 'gender': 'M'}]}
 
     Not to be confused with ``itertools.groupby``
 
@@ -373,17 +370,7 @@ def join[T1, T2, KT](
     ... )
     >>> sorted_res = sorted(cz.itertoolz.unique(result))
     >>> [(i[0][0], i[1][1]) for i in sorted_res]
-    [
-    ('Alice', 'Berlin'),
-    ('Alice', 'Paris'),
-    ('Alice', 'Shanghai'),
-    ('Edith', 'Chicago'),
-    ('Edith', 'NYC'),
-    ('Zhao', 'Chicago'),
-    ('Zhao', 'NYC'),
-    ('Zhao', 'Berlin'),
-    ('Zhao', 'Paris'),
-    ]
+    [('Alice', 'Berlin'), ('Alice', 'Paris'), ('Alice', 'Shanghai'), ('Edith', 'Chicago'), ('Edith', 'NYC'), ('Zhao', 'Chicago'), ('Zhao', 'NYC'), ('Zhao', 'Berlin'), ('Zhao', 'Paris')]
 
     Specify outer joins with keyword arguments ``left_default`` and/or
     ``right_default``.
@@ -723,8 +710,7 @@ def reduceby[T, K, VT](
     ...     return s
 
     >>> cz.itertoolz.reduceby(iseven, set_add, [1, 2, 3, 4, 1, 2, 3], set)
-    {True:  set([2, 4]),
-    False: set([1, 3])}
+    {False: {1, 3}, True: {2, 4}}
     """
 
 def remove[T](predicate: Callable[[T], bool], seq: Iterable[T]) -> Iterator[T]:

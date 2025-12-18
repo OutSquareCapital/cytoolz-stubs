@@ -73,11 +73,7 @@ def assoc_in[K, V](
     ...     "credit card": "5555-1234-1234-1234",
     ... }
     >>> cz.dicttoolz.assoc_in(purchase, ["order", "costs"], [0.25, 1.00])
-    {
-        "credit card": "5555-1234-1234-1234",
-        "name": "Alice",
-        "order": {"costs": [0.25, 1.00], "items": ["Apple", "Orange"]},
-    }
+    {'name': 'Alice', 'order': {'items': ['Apple', 'Orange'], 'costs': [0.25, 1.0]}, 'credit card': '5555-1234-1234-1234'}
 
     """
 
@@ -212,7 +208,7 @@ def itemmap[K, V, K1, V1](
     >>> import cytoolz as cz
     >>> accountids = {"Alice": 10, "Bob": 20}
     >>> cz.dicttoolz.itemmap(reversed, accountids)
-    {10: "Alice", 20: "Bob"}
+    {10: 'Alice', 20: 'Bob'}
 
     See Also:
         keymap
@@ -388,9 +384,7 @@ def update_in(
     ...     "credit card": "5555-1234-1234-1234",
     ... }
     >>> cz.dicttoolz.update_in(transaction, ["purchase", "costs"], sum)
-    {'credit card': '5555-1234-1234-1234',
-    'name': 'Alice',
-    'purchase': {'costs': 1.75, 'items': ['Apple', 'Orange']}}
+    {'name': 'Alice', 'purchase': {'items': ['Apple', 'Orange'], 'costs': 1.75}, 'credit card': '5555-1234-1234-1234'}
 
     >>> # updating a value when k0 is not in d
     >>> cz.dicttoolz.update_in({}, [1, 2, 3], str, default="bar")

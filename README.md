@@ -14,5 +14,7 @@ uv add git+https://github.com/OutSquareCapital/cytoolz-stubs.git
 run at the root of the repo:
 
 ```bash
-uv run tests/doctests.py
+uv run ruff check src --fix
+uv run ty check src
+uv run stubtester src
 ```

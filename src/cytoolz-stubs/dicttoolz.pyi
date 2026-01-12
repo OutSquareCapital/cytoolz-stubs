@@ -193,14 +193,14 @@ def itemmap[K, V, K1, V1](
     d: Mapping[K, V],
 ) -> dict[K1, V1]: ...
 @overload
-def itemmap[K, V](func: type[reversed[Any]], d: dict[K, V]) -> dict[V, K]: ...
+def itemmap[K, V](func: type[reversed], d: dict[K, V]) -> dict[V, K]: ...
 @overload
 def itemmap[K, V, K1, V1](
     func: Callable[[tuple[K, V]], tuple[K1, V1]],
     d: dict[K, V],
 ) -> dict[K1, V1]: ...
 def itemmap[K, V, K1, V1](
-    func: Callable[[tuple[K, V]], tuple[K1, V1]] | type[reversed[Any]],
+    func: Callable[[tuple[K, V]], tuple[K1, V1]] | type[reversed],
     d: dict[K, V],
 ) -> dict[K1, V1] | dict[V, K]:
     """Apply function to items of dictionary.

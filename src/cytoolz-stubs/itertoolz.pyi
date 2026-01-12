@@ -101,11 +101,29 @@ def count(seq: Iterable[Any]) -> int:
 
     """
 
+@overload
 def diff[T](
     *seqs: Iterable[T],
-    default: T | None = None,
+    default: None = None,
     key: Callable[[T], Any] | None = None,
-) -> Iterator[tuple[T, ...]]:
+) -> Iterator[tuple[T | None, ...]]: ...
+@overload
+def diff[T, U](
+    *seqs: Iterable[T],
+    default: U,
+    key: Callable[[T], Any] | None = None,
+) -> Iterator[tuple[T | U, ...]]: ...
+@overload
+def diff[T](
+    *seqs: Iterable[T],
+    default: T,
+    key: Callable[[T], Any] | None = None,
+) -> Iterator[tuple[T, ...]]: ...
+def diff[T, U](
+    *seqs: Iterable[T],
+    default: U | None = None,
+    key: Callable[[T], Any] | None = None,
+) -> Iterator[tuple[T | U | None, ...]]:
     """Return those items that differ between sequences.
 
     >>> import cytoolz as cz
@@ -285,12 +303,10 @@ def isdistinct(seq: Collection[Any]) -> bool:
     """
 
 @overload
-def isiterable(x: object | Collection[object]) -> TypeIs[Collection[Any]]: ...
+def isiterable[T: Iterable[Any]](x: T) -> TypeIs[T]: ...
 @overload
-def isiterable(x: object | Iterator[object]) -> TypeIs[Iterator[Any]]: ...
-@overload
-def isiterable(x: object | Iterable[object]) -> TypeIs[Iterable[Any]]: ...
-def isiterable(x: Any) -> TypeIs[Iterable[Any]]:
+def isiterable(x: object) -> bool: ...
+def isiterable(x: Any) -> bool:
     """Is x iterable?
 
     >>> import cytoolz as cz

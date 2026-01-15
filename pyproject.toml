@@ -1,24 +1,23 @@
 [project]
-    dependencies    = ["stubtester>=0.1.1"]
+    dependencies    = ["pytest-stubtester>=0.1.1"]
     description     = "Type stubs for cytoolz"
     name            = "cytoolz-stubs"
     readme          = "README.md"
     requires-python = ">=3.12"
-    version         = "0.3.3"
+    version         = "0.3.4"
 
 [build-system]
     build-backend = "uv_build"
     requires      = ["uv_build>=0.9.18"]
 
 [dependency-groups]
-    dev = ["cytoolz>=1.1.0", "ruff>=0.14.9", "stubtester"]
+    dev = ["cytoolz>=1.1.0", "ruff>=0.14.9", "pytest-stubtester"]
 
 [tool.uv.sources]
-    stubtester = { git = "https://github.com/OutSquareCapital/stubtester.git" }
+    pytest-stubtester = { git = "https://github.com/OutSquareCapital/pytest-stubtester.git" }
 [tool.ruff]
     lint.ignore = [
         "C417",
-        "COM812",
         "COM812",
         "D401",
         "E501",

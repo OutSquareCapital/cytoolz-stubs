@@ -18,7 +18,7 @@
 """
 
 from collections.abc import Callable, Iterable, Mapping, MutableMapping, Sequence
-from typing import Any, overload
+from typing import Any, TypeGuard, overload
 
 from typing_extensions import TypeIs
 
@@ -218,9 +218,15 @@ def itemmap[K, V, K1, V1](
 
 @overload
 def keyfilter[K, V, U](
+    predicate: Callable[[K], TypeGuard[U]],
+    d: Mapping[K, V],
+    factory: Callable[[], dict[U, V]] = ...,
+) -> dict[U, V]: ...
+@overload
+def keyfilter[K, V, U](
     predicate: Callable[[K], TypeIs[U]],
     d: Mapping[K, V],
-    factory: Callable[[], dict[K, V]] = ...,
+    factory: Callable[[], dict[U, V]] = ...,
 ) -> dict[U, V]: ...
 @overload
 def keyfilter[K, V](
@@ -229,9 +235,9 @@ def keyfilter[K, V](
     factory: Callable[[], dict[K, V]] = ...,
 ) -> dict[K, V]: ...
 def keyfilter[K, V, U](
-    predicate: Callable[[K], bool] | Callable[[K], TypeIs[U]],
+    predicate: Callable[[K], bool] | Callable[[K], TypeIs[U]] | Callable[[K], TypeGuard[U]],
     d: Mapping[K, V],
-    factory: Callable[[], dict[K, V]] = ...,
+    factory: Callable[[], dict[K, V]] | Callable[[], dict[U, V]] = ...,
 ) -> dict[K, V] | dict[U, V]:
     """Filter items in dictionary by key.
 
@@ -396,6 +402,12 @@ def update_in(
 
 @overload
 def valfilter[K, V, R](
+    predicate: Callable[[V], TypeGuard[R]],
+    d: Mapping[K, V],
+    factory: Callable[[], dict[K, R]] = ...,
+) -> dict[K, R]: ...
+@overload
+def valfilter[K, V, R](
     predicate: Callable[[V], TypeIs[R]],
     d: Mapping[K, V],
     factory: Callable[[], dict[K, R]] = ...,
@@ -406,11 +418,11 @@ def valfilter[K, V](
     d: Mapping[K, V],
     factory: Callable[[], dict[K, V]] = ...,
 ) -> dict[K, V]: ...
-def valfilter(
-    predicate: Callable[[Any], bool],
-    d: Mapping[Any, Any],
-    factory: Callable[[], dict[Any, Any]] = ...,
-) -> dict[Any, Any]:
+def valfilter[K, V, R](
+    predicate: Callable[[V], bool] | Callable[[V], TypeIs[R]] | Callable[[V], TypeGuard[R]],
+    d: Mapping[K, V],
+    factory: Callable[[], dict[K, V]] | Callable[[], dict[K, R]] = ...,
+) -> dict[K, V] | dict[K, R]:
     """Filter items in dictionary by value.
 
     >>> import cytoolz as cz

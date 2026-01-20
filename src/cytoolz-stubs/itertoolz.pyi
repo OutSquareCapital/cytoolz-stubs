@@ -41,7 +41,7 @@ def accumulate[T](
 
     """
 
-def concat[T](seqs: Iterable[Iterable[T]] | Iterable[T]) -> Iterator[T]:
+def concat[T](seqs: Iterable[Iterable[T]]) -> Iterator[T]:
     """Concatenate zero or more iterables, any of which may be infinite.
 
     An infinite sequence will prevent the rest of the arguments from
@@ -70,7 +70,7 @@ def concatv[T](*seqs: Iterable[T]) -> Iterator[T]:
 
     """
 
-def cons[T](el: T, seq: Iterable[T]) -> Iterator[T]:
+def cons[T, U](el: T, seq: Iterable[U]) -> Iterator[T | U]:
     """Add el to beginning of (possibly infinite) sequence seq.
 
     >>> import cytoolz as cz
@@ -785,7 +785,7 @@ def sliding_window(n: int, seq: Iterable[Any]) -> Iterator[tuple[Any, ...]]:
 def tail[S: Sequence[Any]](n: int, seq: S) -> S: ...
 @overload
 def tail[T](n: int, seq: Iterable[T]) -> tuple[T, ...]: ...
-def tail[T](n: int, seq: Iterable[T]) -> Sequence[Any] | tuple[Any, ...]:
+def tail[T](n: int, seq: Iterable[T]) -> Sequence[T] | tuple[T, ...]:
     """The last n elements of a sequence.
 
     Args:

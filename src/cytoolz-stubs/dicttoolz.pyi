@@ -181,26 +181,29 @@ def itemfilter[K, V](
     """
 
 @overload
-def itemmap[K, V, K1, V1, F: MutableMapping[Any, Any]](
-    itemfunc: Callable[[tuple[K, V]], tuple[K1, V1]],
-    d: Mapping[K, V],
-    *,
-    factory: Callable[[], F],
-) -> F: ...
-@overload
 def itemmap[K, V, K1, V1](
-    itemfunc: Callable[[tuple[K, V]], tuple[K1, V1]],
+    func: Callable[[tuple[K, V]], tuple[K1, V1]],
     d: Mapping[K, V],
-) -> dict[K1, V1]: ...
-@overload
-def itemmap[K, V](func: type[reversed], d: dict[K, V]) -> dict[V, K]: ...
+    factory: Callable[[], MutableMapping[K1, V1]],
+) -> MutableMapping[K1, V1]: ...
 @overload
 def itemmap[K, V, K1, V1](
     func: Callable[[tuple[K, V]], tuple[K1, V1]],
-    d: dict[K, V],
+    d: Mapping[K, V],
 ) -> dict[K1, V1]: ...
+@overload
+def itemmap[K, V](
+    func: type[reversed[tuple[K, V]]],
+    d: Mapping[K, V],
+    factory: Callable[[], MutableMapping[V, K]],
+) -> MutableMapping[V, K]: ...
+@overload
+def itemmap[K, V](
+    func: type[reversed[tuple[K, V]]],
+    d: Mapping[K, V],
+) -> dict[V, K]: ...
 def itemmap[K, V, K1, V1](
-    func: Callable[[tuple[K, V]], tuple[K1, V1]] | type[reversed],
+    func: Callable[[tuple[K, V]], tuple[K1, V1]] | type[reversed[tuple[K, V]]],
     d: dict[K, V],
 ) -> dict[K1, V1] | dict[V, K]:
     """Apply function to items of dictionary.
@@ -257,14 +260,14 @@ def keyfilter[K, V, U](
 
 @overload
 def keymap[K, K1, V](
-    keyfunc: Callable[[K], K1],
+    func: Callable[[K], K1],
     d: Mapping[K, V],
     *,
     factory: Callable[[], MutableMapping[K1, V]] = ...,
 ) -> MutableMapping[K1, V]: ...
 @overload
 def keymap[K, K1, V](
-    keyfunc: Callable[[K], K1],
+    func: Callable[[K], K1],
     d: Mapping[K, V],
 ) -> dict[K1, V]: ...
 def keymap[K, V, K1](
@@ -441,34 +444,34 @@ def valfilter[K, V, R](
 
 @overload
 def valmap[K, V_inner, V_outer](
-    valfunc: type[dict[V_inner, V_outer]],
+    func: type[dict[V_inner, V_outer]],
     d: Mapping[K, Iterable[tuple[V_inner, V_outer]]],
 ) -> dict[K, dict[V_inner, V_outer]]: ...
 @overload
 def valmap[K, V_inner](
-    valfunc: type[list[V_inner]],
+    func: type[list[V_inner]],
     d: Mapping[K, Iterable[V_inner]],
 ) -> dict[K, list[V_inner]]: ...
 @overload
 def valmap[K, V_inner](
-    valfunc: type[tuple[V_inner, ...]],
+    func: type[tuple[V_inner, ...]],
     d: Mapping[K, Iterable[V_inner]],
 ) -> dict[K, tuple[V_inner, ...]]: ...
 @overload
 def valmap[K, V_inner](
-    valfunc: type[set[V_inner]],
+    func: type[set[V_inner]],
     d: Mapping[K, Iterable[V_inner]],
 ) -> dict[K, set[V_inner]]: ...
 @overload
 def valmap[K, V, V1](
-    valfunc: Callable[[V], V1],
+    func: Callable[[V], V1],
     d: Mapping[K, V],
     *,
     factory: Callable[[], MutableMapping[K, V1]],
 ) -> MutableMapping[K, V1]: ...
 @overload
 def valmap[K, V, V1](
-    valfunc: Callable[[V], V1],
+    func: Callable[[V], V1],
     d: Mapping[K, V],
 ) -> dict[K, V1]: ...
 def valmap[K, V, V1](

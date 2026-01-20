@@ -8,7 +8,7 @@ Example:
     >>> get(0, ("a", "b"))
     'a'
 
-    When we use it in higher order functions we o_ften want to pass a partially
+    When we use it in higher order functions we often want to pass a partially
     evaluated form
     >>> data = [(1, 2), (11, 22), (111, 222)]
     >>> list(map(lambda seq: get(0, seq), data))

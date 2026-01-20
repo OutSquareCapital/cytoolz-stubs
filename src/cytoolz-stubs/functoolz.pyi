@@ -52,6 +52,78 @@ def complement[**P](func: Callable[P, bool]) -> Callable[P, bool]:
     False
     """
 
+@overload
+def compose[T]() -> Callable[[T], T]: ...
+@overload
+def compose[**P, T](func: Callable[P, T]) -> Callable[P, T]: ...
+@overload
+def compose[**P, T1, T2](
+    func_1: Callable[[T1], T2],
+    func_2: Callable[P, T1],
+) -> Callable[P, T2]: ...
+@overload
+def compose[**P, T1, T2, T3](
+    func_1: Callable[[T2], T3],
+    func_2: Callable[[T1], T2],
+    func_3: Callable[P, T1],
+) -> Callable[P, T3]: ...
+@overload
+def compose[**P, T1, T2, T3, T4](
+    func_1: Callable[[T3], T4],
+    func_2: Callable[[T2], T3],
+    func_3: Callable[[T1], T2],
+    func_4: Callable[P, T1],
+) -> Callable[P, T4]: ...
+@overload
+def compose[**P, T1, T2, T3, T4, T5](
+    func_1: Callable[[T4], T5],
+    func_2: Callable[[T3], T4],
+    func_3: Callable[[T2], T3],
+    func_4: Callable[[T1], T2],
+    func_5: Callable[P, T1],
+) -> Callable[P, T5]: ...
+@overload
+def compose[**P, T1, T2, T3, T4, T5, T6](
+    func_1: Callable[[T5], T6],
+    func_2: Callable[[T4], T5],
+    func_3: Callable[[T3], T4],
+    func_4: Callable[[T2], T3],
+    func_5: Callable[[T1], T2],
+    func_6: Callable[P, T1],
+) -> Callable[P, T6]: ...
+@overload
+def compose[**P, T1, T2, T3, T4, T5, T6, T7](
+    func_1: Callable[[T6], T7],
+    func_2: Callable[[T5], T6],
+    func_3: Callable[[T4], T5],
+    func_4: Callable[[T3], T4],
+    func_5: Callable[[T2], T3],
+    func_6: Callable[[T1], T2],
+    func_7: Callable[P, T1],
+) -> Callable[P, T7]: ...
+@overload
+def compose[**P, T1, T2, T3, T4, T5, T6, T7, T8](
+    func_1: Callable[[T7], T8],
+    func_2: Callable[[T6], T7],
+    func_3: Callable[[T5], T6],
+    func_4: Callable[[T4], T5],
+    func_5: Callable[[T3], T4],
+    func_6: Callable[[T2], T3],
+    func_7: Callable[[T1], T2],
+    func_8: Callable[P, T1],
+) -> Callable[P, T8]: ...
+@overload
+def compose[**P, T1, T2, T3, T4, T5, T6, T7, T8, T9](
+    func_1: Callable[[T8], T9],
+    func_2: Callable[[T7], T8],
+    func_3: Callable[[T6], T7],
+    func_4: Callable[[T5], T6],
+    func_5: Callable[[T4], T5],
+    func_6: Callable[[T3], T4],
+    func_7: Callable[[T2], T3],
+    func_8: Callable[[T1], T2],
+    func_9: Callable[P, T1],
+) -> Callable[P, T9]: ...
 def compose(*funcs: Callable[..., Any]) -> Callable[..., Any]:
     """Compose functions to operate in series.
 
@@ -75,33 +147,77 @@ def compose(*funcs: Callable[..., Any]) -> Callable[..., Any]:
     """
 
 @overload
-def compose_left[**P, T](fn_1: Callable[P, T]) -> Callable[P, T]: ...
+def compose_left[T]() -> Callable[[T], T]: ...
 @overload
-def compose_left[**P, T, T1](
-    fn_1: Callable[P, T],
-    fn_2: Callable[[T], T1],
-) -> Callable[P, T1]: ...
+def compose_left[**P, T](func: Callable[P, T]) -> Callable[P, T]: ...
 @overload
-def compose_left[**P, T, T1, T2](
-    fn_1: Callable[P, T],
-    fn_2: Callable[[T], T1],
-    fn_3: Callable[[T1], T2],
+def compose_left[**P, T1, T2](
+    func_1: Callable[P, T1],
+    func_2: Callable[[T1], T2],
 ) -> Callable[P, T2]: ...
 @overload
-def compose_left[**P, T, T1, T2, T3](
-    fn_1: Callable[P, T],
-    fn_2: Callable[[T], T1],
-    fn_3: Callable[[T1], T2],
-    fn_4: Callable[[T2], T3],
+def compose_left[**P, T1, T2, T3](
+    func_1: Callable[P, T1],
+    func_2: Callable[[T1], T2],
+    func_3: Callable[[T2], T3],
 ) -> Callable[P, T3]: ...
 @overload
-def compose_left[**P, T, T1, T2, T3, T4](
-    fn_1: Callable[P, T],
-    fn_2: Callable[[T], T1],
-    fn_3: Callable[[T1], T2],
-    fn_4: Callable[[T2], T3],
-    fn_5: Callable[[T3], T4],
+def compose_left[**P, T1, T2, T3, T4](
+    func_1: Callable[P, T1],
+    func_2: Callable[[T1], T2],
+    func_3: Callable[[T2], T3],
+    func_4: Callable[[T3], T4],
 ) -> Callable[P, T4]: ...
+@overload
+def compose_left[**P, T1, T2, T3, T4, T5](
+    func_1: Callable[P, T1],
+    func_2: Callable[[T1], T2],
+    func_3: Callable[[T2], T3],
+    func_4: Callable[[T3], T4],
+    func_5: Callable[[T4], T5],
+) -> Callable[P, T5]: ...
+@overload
+def compose_left[**P, T1, T2, T3, T4, T5, T6](
+    func_1: Callable[P, T1],
+    func_2: Callable[[T1], T2],
+    func_3: Callable[[T2], T3],
+    func_4: Callable[[T3], T4],
+    func_5: Callable[[T4], T5],
+    func_6: Callable[[T5], T6],
+) -> Callable[P, T6]: ...
+@overload
+def compose_left[**P, T1, T2, T3, T4, T5, T6, T7](
+    func_1: Callable[P, T1],
+    func_2: Callable[[T1], T2],
+    func_3: Callable[[T2], T3],
+    func_4: Callable[[T3], T4],
+    func_5: Callable[[T4], T5],
+    func_6: Callable[[T5], T6],
+    func_7: Callable[[T6], T7],
+) -> Callable[P, T7]: ...
+@overload
+def compose_left[**P, T1, T2, T3, T4, T5, T6, T7, T8](
+    func_1: Callable[P, T1],
+    func_2: Callable[[T1], T2],
+    func_3: Callable[[T2], T3],
+    func_4: Callable[[T3], T4],
+    func_5: Callable[[T4], T5],
+    func_6: Callable[[T5], T6],
+    func_7: Callable[[T6], T7],
+    func_8: Callable[[T7], T8],
+) -> Callable[P, T8]: ...
+@overload
+def compose_left[**P, T1, T2, T3, T4, T5, T6, T7, T8, T9](
+    func_1: Callable[P, T1],
+    func_2: Callable[[T1], T2],
+    func_3: Callable[[T2], T3],
+    func_4: Callable[[T3], T4],
+    func_5: Callable[[T4], T5],
+    func_6: Callable[[T5], T6],
+    func_7: Callable[[T6], T7],
+    func_8: Callable[[T7], T8],
+    func_9: Callable[[T8], T9],
+) -> Callable[P, T9]: ...
 def compose_left(*funcs: Callable[..., Any]) -> Callable[..., Any]:
     """Compose functions to operate in series.
 
@@ -124,7 +240,7 @@ def compose_left(*funcs: Callable[..., Any]) -> Callable[..., Any]:
 
     """
 
-class curry:  # noqa: N801
+class curry[**P, T]:  # noqa: N801
     """Curry a callable function.
 
     Enables partial application of arguments through calling a function with an
@@ -155,8 +271,19 @@ class curry:  # noqa: N801
 
     """
 
-    def __init__(self, *args: object, **kwargs: object) -> None: ...
-    def __call__(self, *args: object, **kwargs: object) -> object: ...
+    @property
+    def func(self) -> Callable[P, T]: ...
+    @property
+    def args(self) -> tuple[Any, ...]: ...
+    @property
+    def keywords(self) -> dict[str, Any]: ...
+    def __init__(self, func: Callable[P, T], /, *args: object, **kwargs: object) -> None: ...
+    @overload
+    def __call__(self, /, *args: P.args, **kwargs: P.kwargs) -> T: ...
+    @overload
+    def __call__(self, /, *args: object, **kwargs: object) -> Callable[..., T]: ...
+    def bind(self, /, *args: object, **kwargs: object) -> Callable[..., T]: ...
+    def call(self, /, *args: P.args, **kwargs: P.kwargs) -> T: ...
 
 def do[T](func: Callable[[T], Any], x: T) -> T:
     """Runs ``func`` on ``x``, returns ``x``.
@@ -319,33 +446,85 @@ def memoize[T](
     """
 
 @overload
-def pipe[**P, T](data: T, fn1: Callable[P, T]) -> T: ...
+def pipe[T](data: T) -> T: ...
 @overload
-def pipe[**P, T, T1](data: T, fn1: Callable[P, T], fn2: Callable[[T], T1]) -> T1: ...
+def pipe[T, T1](data: T, func: Callable[[T], T1]) -> T1: ...
 @overload
-def pipe[**P, T, T1, T2](
+def pipe[T, T1, T2](
     data: T,
-    fn1: Callable[P, T],
-    fn2: Callable[[T], T1],
-    fn3: Callable[[T1], T2],
+    func_1: Callable[[T], T1],
+    func_2: Callable[[T1], T2],
 ) -> T2: ...
 @overload
-def pipe[**P, T, T1, T2, T3](
+def pipe[T, T1, T2, T3](
     data: T,
-    fn1: Callable[P, T],
-    fn2: Callable[[T], T1],
-    fn3: Callable[[T1], T2],
-    fn4: Callable[[T2], T3],
+    func_1: Callable[[T], T1],
+    func_2: Callable[[T1], T2],
+    func_3: Callable[[T2], T3],
 ) -> T3: ...
 @overload
-def pipe[**P, T, T1, T2, T3, T4](
+def pipe[T, T1, T2, T3, T4](
     data: T,
-    fn1: Callable[P, T],
-    fn2: Callable[[T], T1],
-    fn3: Callable[[T1], T2],
-    fn4: Callable[[T2], T3],
-    fn5: Callable[[T3], T4],
+    func_1: Callable[[T], T1],
+    func_2: Callable[[T1], T2],
+    func_3: Callable[[T2], T3],
+    func_4: Callable[[T3], T4],
 ) -> T4: ...
+@overload
+def pipe[T, T1, T2, T3, T4, T5](
+    data: T,
+    func_1: Callable[[T], T1],
+    func_2: Callable[[T1], T2],
+    func_3: Callable[[T2], T3],
+    func_4: Callable[[T3], T4],
+    func_5: Callable[[T4], T5],
+) -> T5: ...
+@overload
+def pipe[T, T1, T2, T3, T4, T5, T6](
+    data: T,
+    func_1: Callable[[T], T1],
+    func_2: Callable[[T1], T2],
+    func_3: Callable[[T2], T3],
+    func_4: Callable[[T3], T4],
+    func_5: Callable[[T4], T5],
+    func_6: Callable[[T5], T6],
+) -> T6: ...
+@overload
+def pipe[T, T1, T2, T3, T4, T5, T6, T7](
+    data: T,
+    func_1: Callable[[T], T1],
+    func_2: Callable[[T1], T2],
+    func_3: Callable[[T2], T3],
+    func_4: Callable[[T3], T4],
+    func_5: Callable[[T4], T5],
+    func_6: Callable[[T5], T6],
+    func_7: Callable[[T6], T7],
+) -> T7: ...
+@overload
+def pipe[T, T1, T2, T3, T4, T5, T6, T7, T8](
+    data: T,
+    func_1: Callable[[T], T1],
+    func_2: Callable[[T1], T2],
+    func_3: Callable[[T2], T3],
+    func_4: Callable[[T3], T4],
+    func_5: Callable[[T4], T5],
+    func_6: Callable[[T5], T6],
+    func_7: Callable[[T6], T7],
+    func_8: Callable[[T7], T8],
+) -> T8: ...
+@overload
+def pipe[T, T1, T2, T3, T4, T5, T6, T7, T8, T9](
+    data: T,
+    func_1: Callable[[T], T1],
+    func_2: Callable[[T1], T2],
+    func_3: Callable[[T2], T3],
+    func_4: Callable[[T3], T4],
+    func_5: Callable[[T4], T5],
+    func_6: Callable[[T5], T6],
+    func_7: Callable[[T6], T7],
+    func_8: Callable[[T7], T8],
+    func_9: Callable[[T8], T9],
+) -> T9: ...
 def pipe(data: Any, *funcs: Callable[..., Any]) -> Any:
     """Pipe a value through a sequence of functions.
 

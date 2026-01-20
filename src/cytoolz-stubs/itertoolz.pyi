@@ -1,12 +1,5 @@
-from collections.abc import (
-    Callable,
-    Collection,
-    Iterable,
-    Iterator,
-    Mapping,
-    Sequence,
-)
-from typing import Any, Literal, overload
+from collections.abc import Callable, Collection, Iterable, Iterator, Mapping, Sequence
+from typing import Any, Literal, TypeGuard, overload
 
 from typing_extensions import TypeIs
 
@@ -303,7 +296,13 @@ def isdistinct(seq: Collection[Any]) -> bool:
     """
 
 @overload
-def isiterable[T: Iterable[Any]](x: T) -> TypeIs[T]: ...
+def isiterable[T](x: Iterable[T]) -> TypeGuard[Iterable[T]]: ...
+@overload
+def isiterable[T](x: Iterable[T]) -> TypeIs[Iterable[T]]: ...
+@overload
+def isiterable(x: object) -> TypeGuard[Iterable[Any]]: ...
+@overload
+def isiterable(x: object) -> TypeIs[Iterable[Any]]: ...
 @overload
 def isiterable(x: object) -> bool: ...
 def isiterable(x: Any) -> bool:

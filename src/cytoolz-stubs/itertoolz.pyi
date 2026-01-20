@@ -1,5 +1,5 @@
 from collections.abc import Callable, Collection, Iterable, Iterator, Mapping, Sequence
-from typing import Any, Literal, TypeGuard, overload
+from typing import Any, Literal, overload
 
 from typing_extensions import TypeIs
 
@@ -41,7 +41,7 @@ def accumulate[T](
 
     """
 
-def concat[T](seqs: Iterable[Iterable[T]]) -> Iterator[T]:
+def concat[T](seqs: Iterable[Iterable[T]] | Iterable[T]) -> Iterator[T]:
     """Concatenate zero or more iterables, any of which may be infinite.
 
     An infinite sequence will prevent the rest of the arguments from
@@ -70,7 +70,7 @@ def concatv[T](*seqs: Iterable[T]) -> Iterator[T]:
 
     """
 
-def cons[T, U](el: T, seq: Iterable[U]) -> Iterator[T | U]:
+def cons[T](el: T, seq: Iterable[T]) -> Iterator[T]:
     """Add el to beginning of (possibly infinite) sequence seq.
 
     >>> import cytoolz as cz
@@ -295,17 +295,7 @@ def isdistinct(seq: Collection[Any]) -> bool:
     True
     """
 
-@overload
-def isiterable[T](x: Iterable[T]) -> TypeGuard[Iterable[T]]: ...
-@overload
-def isiterable[T](x: Iterable[T]) -> TypeIs[Iterable[T]]: ...
-@overload
-def isiterable(x: object) -> TypeGuard[Iterable[Any]]: ...
-@overload
-def isiterable(x: object) -> TypeIs[Iterable[Any]]: ...
-@overload
-def isiterable(x: object) -> bool: ...
-def isiterable(x: Any) -> bool:
+def isiterable(x: object) -> TypeIs[Iterable[Any]]:
     """Is x iterable?
 
     >>> import cytoolz as cz

@@ -134,7 +134,7 @@ wheels = [
 
 [[package]]
 name = "cytoolz-stubs"
-version = "0.3.4"
+version = "0.3.5"
 source = { editable = "." }
 dependencies = [
     { name = "pytest-stubtester" },

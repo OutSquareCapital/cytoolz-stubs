@@ -7,7 +7,7 @@
     name            = "cytoolz-stubs"
     readme          = "README.md"
     requires-python = ">=3.12"
-    version         = "0.3.4"
+    version         = "0.3.5"
 
 [build-system]
     build-backend = "uv_build"

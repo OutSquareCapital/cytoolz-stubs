@@ -16,5 +16,5 @@ run at the root of the repo:
 ```bash
 uv run ruff check src --fix
 uv run ty check src
-uv run stubtester src
+uv run pytest --stubs
 ```

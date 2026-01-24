@@ -302,11 +302,7 @@ def isdistinct(seq: Collection[Any]) -> bool:
     True
     """
 
-@overload
-def isiterable[T: Iterable[Any]](x: T) -> TypeIs[T]: ...
-@overload
-def isiterable(x: object) -> bool: ...
-def isiterable(x: Any) -> bool:
+def isiterable(x: object) -> TypeIs[Iterable[Any]]:
     """Is x iterable?
 
     >>> import cytoolz as cz

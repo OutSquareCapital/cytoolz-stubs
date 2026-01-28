@@ -124,7 +124,7 @@ def compose_left(*funcs: Callable[..., Any]) -> Callable[..., Any]:
 
     """
 
-class curry:  # noqa: N801
+class curry[**P, T]:  # noqa: N801
     """Curry a callable function.
 
     Enables partial application of arguments through calling a function with an
@@ -155,8 +155,11 @@ class curry:  # noqa: N801
 
     """
 
-    def __init__(self, *args: object, **kwargs: object) -> None: ...
-    def __call__(self, *args: object, **kwargs: object) -> object: ...
+    def __init__(self, func: Callable[P, T], /, *args: object, **kwargs: object) -> None: ...
+    @overload
+    def __call__(self, /, *args: P.args, **kwargs: P.kwargs) -> T: ...
+    @overload
+    def __call__(self, /, *args: object, **kwargs: object) -> Callable[..., T]: ...
 
 def do[T](func: Callable[[T], Any], x: T) -> T:
     """Runs ``func`` on ``x``, returns ``x``.
